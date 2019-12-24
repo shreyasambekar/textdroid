@@ -20,6 +20,8 @@ import android.graphics.Rect;
 //import androidx.annotation.Size;
 import android.util.Log;
 
+import android.graphics.Point;
+
 import android.support.annotation.Size;
 
 /**
@@ -60,7 +62,7 @@ public class Box {
      *
      * @param nativeBox A pointer to the native BOX.
      */
-    Box(long nativeBox) {
+    public Box(long nativeBox) {
         mNativeBox = nativeBox;
         mRecycled = false;
     }
@@ -87,6 +89,13 @@ public class Box {
 
         mNativeBox = nativeBox;
         mRecycled = false;
+    }
+
+
+    public Point getCenter() {
+        int[] g = new int[4];
+        getGeometry(g);
+        return new Point(g[0] + g[2] / 2, g[1] + g[3] / 2);
     }
 
     /**

@@ -19,6 +19,9 @@
 #include <string.h>
 #include <android/bitmap.h>
 
+#include <cmath>
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif  /* __cplusplus */
@@ -112,6 +115,54 @@ jlong Java_com_googlecode_leptonica_android_Clip_nativeClipRectangle(JNIEnv *env
   BOX *box = (BOX *) nativeBox;
   PIX *pixd;
   pixd = pixClipRectangle(pixs,box,NULL);
+  return jlong(pixd);
+}
+
+jlong Java_com_googlecode_leptonica_android_Clip_nativeClipRectangle2(JNIEnv *env, jclass clazz,
+                                                                      jlong nativePix,
+                                                                      jlong nativeBox) {
+  LOGV("%s", __FUNCTION__);
+
+  PIX *pixs = (PIX *) nativePix;
+  BOX *box = (BOX *) nativeBox;
+  Box *boxc = NULL;
+  Pix *pixd;
+  l_int32 bx, by, bw, bh, w, h, d, x, y;
+
+  /* Clip the input box to the pix */
+  pixGetDimensions(pixs, &w, &h, &d);
+  if ((boxc = boxClipToRectangle(box, w, h)) == NULL) {
+    L_WARNING("box doesn't overlap pix\n", __FUNCTION__);
+    return 0;
+  }
+  boxGetGeometry(box, &x, &y, &bw, &bh);
+
+  /* Extract the block */
+  if ((pixd = pixCreate(bw, bh, d)) == NULL) {
+    L_WARNING("pixd not made\n", __FUNCTION__);
+    return 0;
+  }
+
+  boxGetGeometry(boxc, &bx, &by, &bw, &bh);
+  pixCopyResolution(pixd, pixs);
+  pixCopyColormap(pixd, pixs);
+
+  if (x < 0) {
+    x = std::abs(x);
+  } else {
+    x = 0;
+  }
+  if (y < 0) {
+    y = std::abs(y);
+  } else {
+    y = 0;
+  }
+
+  LOGV("pixRasterop to (%i,%i) from (%i,%i); w/h = %i,%i", x, y, bx, by, bw, bh);
+  //copy clip region into new pix
+  pixRasterop(pixd, x, y, bw, bh, PIX_SRC, pixs, bx, by);
+
+  boxDestroy(&boxc);
   return jlong(pixd);
 }
 

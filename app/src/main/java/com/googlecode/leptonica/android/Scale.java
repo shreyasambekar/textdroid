@@ -139,6 +139,10 @@ public class Scale {
         return new Pix(nativePix);
     }
 
+    public static Pix scaleWithoutFiltering(Pix pixs, float scale) {
+        return new Pix(nativeScaleGeneral(pixs.mNativePix, scale,scale, 0,0));
+    }
+
     // ***************
     // * NATIVE CODE *
     // ***************

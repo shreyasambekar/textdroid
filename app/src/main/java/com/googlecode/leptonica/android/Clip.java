@@ -52,7 +52,21 @@ public class Clip {
      * @param box Requested clipping region
      * @return clipped pix, or null if rectangle doesn't intersect source pix
      */
-    public static Pix clipRectangle(Pix source, Box box) {
+    
+/**
+     * box is not clipped if it is outside of the pix dimensions
+     */
+    public static Pix clipRectangle2(Pix source, Box box) {
+        long result = nativeClipRectangle2(source.getNativePix(), box.getNativeBox());
+        if (result != 0) {
+            return new Pix(result);
+        }
+        return null;
+    }
+
+
+
+public static Pix clipRectangle(Pix source, Box box) {
         long result = nativeClipRectangle(source.getNativePix(),
                 box.getNativeBox());
         if (result != 0) {
@@ -64,6 +78,8 @@ public class Clip {
     // ***************
     // * NATIVE CODE *
     // ***************
+
+    private static native long nativeClipRectangle2(long nativePix, long nativeBox);
 
     private static native long nativeClipRectangle(long nativePix, long nativeBox);
 }

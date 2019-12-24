@@ -97,6 +97,17 @@ public class WriteFile {
                 file.getAbsolutePath());
     }
 
+    public static boolean writeImpliedFormat(
+            Pix pixs, File file, int quality, boolean progressive) {
+        if (pixs == null)
+            throw new IllegalArgumentException("Source pix must be non-null");
+        if (file == null)
+            throw new IllegalArgumentException("File must be non-null");
+
+        return nativeWriteImpliedFormat2(
+                pixs.mNativePix, file.getAbsolutePath(), quality, progressive);
+    }
+
     /**
      * Writes a Pix to an Android Bitmap object. The output Bitmap will always
      * be in ARGB_8888 format, but the input Pixs may be any bit-depth.
@@ -136,6 +147,10 @@ public class WriteFile {
     private static native int nativeWriteBytes8(long nativePix, byte[] data);
 
     private static native boolean nativeWriteImpliedFormat(long nativePix, String fileName);
+
+    
+    private static native boolean nativeWriteImpliedFormat2(long nativePix, String fileName, int quality, boolean progressive);
+
 
     private static native boolean nativeWriteBitmap(long nativePix, Bitmap bitmap);
 }

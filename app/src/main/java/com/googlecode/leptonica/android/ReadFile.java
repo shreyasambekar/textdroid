@@ -22,6 +22,15 @@ import android.util.Log;
 
 import java.io.File;
 
+import android.support.annotation.WorkerThread;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import android.net.Uri;
+import java.util.concurrent.ExecutionException;
+import android.content.Context;
+
+
 /**
  * Image input and output methods.
  *
@@ -155,6 +164,46 @@ public class ReadFile {
         bmp.recycle();
 
         return pix;
+    }
+
+    @WorkerThread
+    public static Pix load(Context context, File file) {
+        try {
+            final Bitmap bmp = Glide.with(context)
+                    .asBitmap()
+                    .load(file)
+                    .apply(RequestOptions
+                            .skipMemoryCacheOf(true)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE))
+                    .submit().get();
+            if (bmp != null) {
+                final Pix pix = readBitmap(bmp);
+                bmp.recycle();
+                return pix;
+            }
+        } catch (InterruptedException ignored) {
+        } catch (ExecutionException ignored) {
+        }
+        return null;
+    }
+
+    @WorkerThread
+    public static Pix load(Context context, Uri uri) {
+        try {
+            final Bitmap bmp = Glide.with(context)
+                    .asBitmap()
+                    .load(uri)
+                    .apply(RequestOptions.skipMemoryCacheOf(true))
+                    .submit().get();
+            if (bmp != null) {
+                final Pix pix = readBitmap(bmp);
+                bmp.recycle();
+                return pix;
+            }
+        } catch (InterruptedException e) {
+        } catch (ExecutionException e) {
+        }
+        return null;
     }
 
     /**

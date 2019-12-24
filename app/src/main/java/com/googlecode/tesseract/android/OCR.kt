@@ -24,9 +24,9 @@ import android.graphics.Rect
 import android.graphics.RectF
 import android.support.annotation.StringRes
 import android.support.annotation.WorkerThread
-import com.googlecode.ileptonica.android.Boxa
+import com.googlecode.leptonica.android.Boxa
 import com.googlecode.leptonica.android.Pix
-import com.googlecode.ileptonica.android.Pixa
+import com.googlecode.leptonica.android.Pixa
 import com.googlecode.leptonica.android.WriteFile
 import com.googlecode.tesseract.android.TessBaseAPI.PageSegMode
 

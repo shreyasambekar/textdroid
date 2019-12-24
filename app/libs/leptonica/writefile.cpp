@@ -72,6 +72,32 @@ jboolean Java_com_googlecode_leptonica_android_WriteFile_nativeWriteImpliedForma
   return result;
 }
 
+jboolean Java_com_googlecode_leptonica_android_WriteFile_nativeWriteImpliedFormat2(JNIEnv *env,
+                                                                                  jclass clazz,
+                                                                                  jlong nativePix,
+                                                                                  jstring fileName,
+                                                                                  jint quality,
+                                                                                  jboolean progressive) {
+  PIX *pixs = (PIX *) nativePix;
+
+  const char *c_fileName = env->GetStringUTFChars(fileName, NULL);
+  if (c_fileName == NULL) {
+    LOGE("could not extract fileName string!");
+    return JNI_FALSE;
+  }
+
+  jboolean result = JNI_TRUE;
+
+  if (pixWriteImpliedFormat(c_fileName, pixs, (l_int32) quality, (progressive == JNI_TRUE))) {
+    LOGE("could not write pix data to %s", c_fileName);
+    result = JNI_FALSE;
+  }
+
+  env->ReleaseStringUTFChars(fileName, c_fileName);
+
+  return result;
+}
+
 jboolean Java_com_googlecode_leptonica_android_WriteFile_nativeWriteBitmap(JNIEnv *env,
                                                                            jclass clazz,
                                                                            jlong nativePix,

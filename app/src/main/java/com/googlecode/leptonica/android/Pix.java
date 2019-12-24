@@ -45,7 +45,7 @@ public class Pix {
     public static final int INDEX_D = 2;
 
     /** Package-accessible pointer to native pix */
-    private final long mNativePix;
+    final long mNativePix;
 
     private boolean mRecycled;
 
