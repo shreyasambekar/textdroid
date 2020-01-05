@@ -17,6 +17,7 @@
 
 package com.googlecode.tesseract.android;
 
+import android.Manifest;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 //import androidx.annotation.IntDef;
@@ -33,6 +34,8 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 import android.support.annotation.IntDef;
 import android.support.annotation.WorkerThread;
+
+
 
 
 /**
@@ -320,6 +323,8 @@ public class TessBaseAPI {
      * @return <code>true</code> on success
      */
     public boolean init(String datapath, String language, @OcrEngineMode int ocrEngineMode) {
+
+
         if (datapath == null)
             throw new IllegalArgumentException("Data path must not be null!");
         if (!datapath.endsWith(File.separator))
@@ -847,7 +852,7 @@ public class TessBaseAPI {
      * Cancel recognition started by {@link #getHOCRText(int)}.
      */
     public void stop() {
-        if (mRecycled)
+      if (mRecycled)
             throw new IllegalStateException();
 
         nativeStop(mNativeData);

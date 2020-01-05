@@ -77,9 +77,9 @@ public class Box {
      * @param h Height of the box.
      */
     public Box(int x, int y, int w, int h) {
-        if (x < 0 || y < 0 || w < 0 || h < 0) {
+    /*   if (x < 0 || y < 0 || w < 0 || h < 0) {
             throw new IllegalArgumentException("All box dimensions must be non-negative");
-        }
+        }*/
 
         long nativeBox = nativeCreate(x, y, w, h);
 

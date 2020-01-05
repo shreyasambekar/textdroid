@@ -15,6 +15,7 @@
  */
 package com.googlecode.tesseract.android
 
+import android.Manifest
 import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
@@ -41,8 +42,6 @@ import com.renard.ocr.util.Util
 import java.io.File
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
-
-
 
 sealed class OcrProgress {
     data class Message(@StringRes val message: Int) : OcrProgress()
@@ -318,6 +317,7 @@ class OCR(val pix: Pix, application: TextFairyApplication) : AndroidViewModel(ap
         val tessDir = Util.getTessDir(getApplication())
         val languagesString = languages.joinToString("+")
         logTessParams(languagesString, ocrMode)
+
         val result = mTess.init(tessDir, languagesString, ocrMode)
         if (!result) {
             mCrashLogger.logMessage("init failed. deleting " + languages[0])

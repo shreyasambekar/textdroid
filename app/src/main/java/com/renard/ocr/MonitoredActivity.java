@@ -48,6 +48,8 @@ import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
 
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+
 
 public abstract class MonitoredActivity extends AppCompatActivity implements BaseActivityInterface, OnGlobalLayoutListener {
 
@@ -302,7 +304,7 @@ public abstract class MonitoredActivity extends AppCompatActivity implements Bas
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
                 explainPermission(permission, explanation);
             } else {
-                ActivityCompat.requestPermissions(this, new String[]{permission}, MY_PERMISSIONS_REQUEST);
+                ActivityCompat.requestPermissions(this, new String[]{permission, READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST);
 
             }
         } else {
