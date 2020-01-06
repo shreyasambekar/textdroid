@@ -21,6 +21,7 @@ import com.renard.ocr.analytics.Analytics;
 import com.renard.ocr.analytics.CrashLogger;
 import com.renard.ocr.documents.creation.crop.BaseActivityInterface;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -304,7 +305,7 @@ public abstract class MonitoredActivity extends AppCompatActivity implements Bas
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
                 explainPermission(permission, explanation);
             } else {
-                ActivityCompat.requestPermissions(this, new String[]{permission, READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST);
+                ActivityCompat.requestPermissions(this, new String[]{permission, Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST);
 
             }
         } else {
