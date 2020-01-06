@@ -315,6 +315,25 @@ jstring Java_com_googlecode_tesseract_android_TessBaseAPI_nativeGetUTF8Text(JNIE
   return result;
 }
 
+
+jstring Java_com_googlecode_tesseract_android_TessBaseAPI_nativeGetHtmlText(JNIEnv *env,
+                                                                            jobject thiz,
+									    jlong mNativeData) {
+
+    native_data_t *nat = (native_data_t*) mNativeData;
+    tesseract::OcrEngineMode mode = nat->api.oem();
+    int redThreshhold = 70;
+    if (mode == tesseract::OcrEngineMode::OEM_LSTM_ONLY ||
+        mode == tesseract::OcrEngineMode::OEM_TESSERACT_LSTM_COMBINED) {
+        redThreshhold = 35;
+    }
+
+    tesseract::ResultIterator *res_it = nat->api.GetIterator();
+    std::string utf8text = GetHTMLText(res_it, redThreshhold);
+    jstring result = env->NewStringUTF(utf8text.c_str());
+    return result;
+}
+
 void Java_com_googlecode_tesseract_android_TessBaseAPI_nativeStop(JNIEnv *env, 
                                                                   jobject thiz,
                                                                   jlong mNativeData) {

@@ -606,7 +606,7 @@ public class TessBaseAPI {
 
 
     public String getHtmlText() {
-        return nativeGetHtmlText();
+        return nativeGetHtmlText(mNativeData);
     }
 
     /**
@@ -960,7 +960,7 @@ public class TessBaseAPI {
     private native String nativeGetUTF8Text(long mNativeData);
 
 
-    private native String nativeGetHtmlText();
+    private native String nativeGetHtmlText(long mNativeData);
 
 
     private native int nativeMeanConfidence(long mNativeData);
