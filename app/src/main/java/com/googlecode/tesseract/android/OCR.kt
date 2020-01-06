@@ -333,7 +333,7 @@ class OCR(val pix: Pix, application: TextFairyApplication) : AndroidViewModel(ap
     private fun Int.name(): String =
             when (this) {
                 TessBaseAPI.OEM_TESSERACT_ONLY -> "OEM_TESSERACT_ONLY"
-                TessBaseAPI.OEM_TESSERACT_CUBE_COMBINED -> "OEM_TESSERACT_CUBE_COMBINED"
+                TessBaseAPI.OEM_TESSERACT_LSTM_COMBINED -> "OEM_TESSERACT_LSTM_COMBINED"
                 TessBaseAPI.OEM_DEFAULT -> "OEM_DEFAULT"
                 else -> "undefined"
             }
