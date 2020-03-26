@@ -25,8 +25,8 @@
 #include <allheaders.h>
 #include <cstring>
 
-#define IMAGE_PROCESSING_LOG_TAG "Text Fairy (native)"
 #define LOGV(...) __android_log_print(ANDROID_LOG_VERBOSE, IMAGE_PROCESSING_LOG_TAG, __VA_ARGS__)
+#define IMAGE_PROCESSING_LOG_TAG "Text Fairy (native)"
 #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, IMAGE_PROCESSING_LOG_TAG, __VA_ARGS__)
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO, IMAGE_PROCESSING_LOG_TAG, __VA_ARGS__)
 #define LOGW(...) __android_log_print(ANDROID_LOG_WARN, IMAGE_PROCESSING_LOG_TAG, __VA_ARGS__)
