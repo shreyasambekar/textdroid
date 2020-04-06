@@ -78,6 +78,8 @@ public class ImageUploadDialog extends Activity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_imageupload);
+
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Upload image?");

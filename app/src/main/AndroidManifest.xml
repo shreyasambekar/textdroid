@@ -149,7 +149,7 @@
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value=".main_menu.AboutActivity"/>
         </activity>
-        <activity android:name=".documents.creation.ImageUploadDialog" />
+        <activity android:name=".documents.creation.ImageUploadDialog" android:theme="@style/TransparentStyle" />
 
     </application>
 
