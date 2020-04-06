@@ -33,7 +33,7 @@
                     android:paddingLeft="@dimen/dropshadow_padding_left"
                     android:paddingRight="@dimen/dropshadow_padding_right"
                     android:paddingTop="@dimen/dropshadow_padding_top"
-                    android:src="@drawable/me"/>
+                    android:src="@drawable/coep_logo"/>
 
             <TextView
                     android:id="@+id/textView1"
