@@ -80,12 +80,15 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import com.renard.ocr.documents.creation.ImageUploadDialog;
+
 /**
  * activities which extend this activity can create a new document. this class
  * also containes the code for functionality which is shared by
  * {@link DocumentGridActivity} and {@link DocumentActivity}
  *
  * @author renard
+ * @author shreyas
  */
 public abstract class NewDocumentActivity extends MonitoredActivity {
 
@@ -93,6 +96,7 @@ public abstract class NewDocumentActivity extends MonitoredActivity {
     public final static String EXTRA_NATIVE_PIX = "pix_pointer";
     private final static String IMAGE_LOAD_PROGRESS_TAG = "image_load_progress";
 
+    public final static String UPLOAD_IMAGE = "upload_image";
 
     private static final int PDF_PROGRESS_DIALOG_ID = 0;
     private static final int DELETE_PROGRESS_DIALOG_ID = 1;
@@ -110,6 +114,7 @@ public abstract class NewDocumentActivity extends MonitoredActivity {
     private final static int REQUEST_CODE_PICK_PHOTO = 1;
     final static int REQUEST_CODE_CROP_PHOTO = 2;
     protected final static int REQUEST_CODE_OCR = 3;
+    public final static int REQUEST_CODE_IMGUPLDLG = 4;
 
     private static final String DATE_CAMERA_INTENT_STARTED_STATE = "com.renard.ocr.android.photo.TakePhotoActivity.dateCameraIntentStarted";
     private static final String STATE_RECEIVER_REGISTERED = "state_receiver_registered";
@@ -122,6 +127,7 @@ public abstract class NewDocumentActivity extends MonitoredActivity {
     private static Uri localCameraPicUri = null;
     private boolean mReceiverRegistered = false;
     private ImageSource mImageSource = ImageSource.CAMERA;
+
 
 
     private static class CameraResult {
@@ -388,6 +394,16 @@ public abstract class NewDocumentActivity extends MonitoredActivity {
                 case REQUEST_CODE_PICK_PHOTO:
                     mCameraResult = new CameraResult(requestCode, resultCode, data, ImageSource.PICK);
                     break;
+                case REQUEST_CODE_IMGUPLDLG:
+                    long nativePix = data.getLongExtra(EXTRA_NATIVE_PIX, 0);
+                    boolean accessibilityMode = data.getBooleanExtra(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, false);
+                    Toast.makeText(this, "In the new document activity", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(this, OCRActivity.class);
+                    intent.putExtra(EXTRA_NATIVE_PIX, nativePix);
+                    intent.putExtra(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, accessibilityMode);
+                    intent.putExtra(OCRActivity.EXTRA_PARENT_DOCUMENT_ID, getParentId());
+                    startActivityForResult(intent, REQUEST_CODE_OCR);
+                    break;
             }
         } else if (CropImageActivity.RESULT_NEW_IMAGE == resultCode) {
             switch (mImageSource) {
@@ -404,12 +420,18 @@ public abstract class NewDocumentActivity extends MonitoredActivity {
         }
     }
 
+
     void startOcrActivity(long nativePix, boolean accessibilityMode) {
-        Intent intent = new Intent(this, OCRActivity.class);
+        Intent i = new Intent(this, ImageUploadDialog.class);
+        i.putExtra(EXTRA_NATIVE_PIX, nativePix);
+        i.putExtra(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, accessibilityMode);
+        //i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivityForResult(i, REQUEST_CODE_IMGUPLDLG);
+        /*Intent intent = new Intent(this, OCRActivity.class);
         intent.putExtra(EXTRA_NATIVE_PIX, nativePix);
         intent.putExtra(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, accessibilityMode);
         intent.putExtra(OCRActivity.EXTRA_PARENT_DOCUMENT_ID, getParentId());
-        startActivityForResult(intent, REQUEST_CODE_OCR);
+        startActivityForResult(intent, REQUEST_CODE_OCR);*/
     }
 
     @Override
