@@ -38,10 +38,10 @@
     <string name="tesseract_ocr_summary">Tesseract is probably the most accurate open source OCR
         engine available.
     </string>
-    <string name="contact_welcome_text">Hi, we are B Tech Computer Engineering students Shreyas, Hrishi and Pranit. We have modified the Text Fairy as our B Tech project. We hope she is useful for you.
+    <string name="contact_welcome_text">Hi, we are B Tech Computer Engineering students Shreyas, Hrishi and Pranit. We have created this app as our B Tech project. We hope it is useful for you.
     </string>
     <string name="download_failed">Downloading of %1$s failed!</string>
-    <string name="app_name">Text Fairy</string>
+    <string name="app_name">Textdroid</string>
     <string name="tips">Tips</string>
     <string name="ocr_language_delete">Delete</string>
     <string name="ocr_language_title">Manage Languages</string>
@@ -157,7 +157,7 @@
     <string name="beta_test_text_2">Influence development of new features?</string>
     <string name="enroll_as_beta_tester">Enroll in beta test program.</string>
     <string name="about">About</string>
-    <string name="feedback_subject">Text fairy feedback</string>
+    <string name="feedback_subject">Textdroid feedback</string>
     <string name="app_version">Version %s</string>
     <string name="image_not_32_bit">Image needs to be 32 bit.</string>
     <string name="image_format_unsupported">Image format not recognized. Only png or jpeg files are
