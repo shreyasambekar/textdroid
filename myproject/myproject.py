@@ -1,54 +1,39 @@
-# -*- coding: utf-8 -*-
-import logging
-import os
-import tempfile
-import io
+import urllib.request
+from flask import Flask, request, redirect, jsonify
+from werkzeug.utils import secure_filename
+from werkzeug.datastructures import ImmutableMultiDict
 import base64
-
-import werkzeug
-from flask import Flask, jsonify
-from flask import abort
-from flask import request, Response
-
-
-import jsonpickle
-import numpy as np
-import cv2
-
-
-from image_preprocessing.remove_noise import process_image_for_ocr
-
-
+from PIL import Image
 
 app = Flask(__name__)
 
 
-
-@app.route('/preprocess', methods=['POST'])
-def process():
-    _setup()  #Loads model and weights - takes ~2 seconds
-    r = request
-    nparr = np.fromstring(r.data, np.uint8)  #convert string of image data to uint8
-    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)  #decode image
-    cv2.imwrite('server.jpg', img)
-    img = process_image_for_ocr('/home/shreyas/BTECHPROECT/myproject/server.jpg')  #processing the image
-    #cv2.imshow('Result', img)
-    #cv2.waitkey()
-    cv2.imwrite('result.jpg', img)
-    response = {'message': 'image received. size={}x{}'.format(img.shape[1], img.shape[0])}
-    response_pickled = jsonpickle.encode(response)
-    return Response(response=response_pickled, status=200, mimetype="application/json")
-    _, img_encoded = cv2.imencode('.jpg', img)  #again encode the image
-    cv2.imwrite('new.jpeg', img)  #also write non-encoded image
-    # build a response dict to send back to client
-    #response = img_encoded
-    #response_pickled = jsonpickle.encode(response.tostring())  #encode response using jsonpickle
-    #return Response(response=response_pickled, status=200, mimetype="application/json")
-    return flask.jsonify(response_value_1=img_encoded)
+@app.route("/")
+def hello():
+    return "<h1 style='color:blue'>Hello There!</h1>"
 
 
-def _setup():
-    logging.basicConfig(format='[%(asctime)s] %(levelname)s : %(message)s', level=logging.INFO)
+@app.route('/file-upload', methods=['POST'])
+def uploadimg():
+    data = dict(request.form)
+    img = data['image']
+    try:
+        imgdata = base64.b64decode(img)
+    except:
+        return "base64 decode error"
+    filename = data['filename']
+    filepath = "/home/shreyas/BTECHPROECT/myproject/image/" + filename + '.jpg'
+
+    with open(filepath, 'wb') as f:
+        f.write(imgdata)
+        f.close()
+    #try:
+    #   with Image.open(filepath) as image:
+    #        image.save("/home/hbubuntu/myproject/image/" + filename + ".jpg")
+    #except:
+    #    return "error in jpg save file"
+    return "OK"
+
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0')

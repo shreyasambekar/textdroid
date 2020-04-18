@@ -96,7 +96,7 @@ import java.lang.Math;
 public class ImageUploadDialog extends Activity {
 
     int PICK_IMAGE_REQUEST = 111;
-    String URL ="http://10.0.2.2:80/file-upload";
+    String URL ="http://192.168.0.8/file-upload";
     ProgressDialog progressDialog;
 
     protected void onCreate(Bundle savedInstanceState) {
