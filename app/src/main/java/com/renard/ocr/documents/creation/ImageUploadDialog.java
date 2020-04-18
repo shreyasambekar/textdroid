@@ -31,6 +31,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -45,6 +46,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.accessibility.AccessibilityManagerCompat;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Base64;
 import android.util.Log;
 import android.util.Pair;
 import android.view.Menu;
@@ -56,19 +58,36 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import static com.renard.ocr.documents.creation.NewDocumentActivity.EXTRA_NATIVE_PIX;
 import static com.renard.ocr.documents.creation.NewDocumentActivity.UPLOAD_IMAGE;
+import com.googlecode.leptonica.android.WriteFile;
+import com.googlecode.leptonica.android.Pix;
+import java.lang.Object;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import java.sql.Timestamp;
+import java.lang.Math;
 
 /*  Created by: Shreyas Ambekar on
         April 1, 2020
@@ -76,10 +95,12 @@ import static com.renard.ocr.documents.creation.NewDocumentActivity.UPLOAD_IMAGE
 
 public class ImageUploadDialog extends Activity {
 
+    int PICK_IMAGE_REQUEST = 111;
+    String URL ="http://10.0.2.2:80/file-upload";
+    ProgressDialog progressDialog;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_imageupload);
-
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Upload image?");
@@ -88,7 +109,7 @@ public class ImageUploadDialog extends Activity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Bundle extras = getIntent().getExtras();
-                long nativePix = extras.getLong(EXTRA_NATIVE_PIX,  0);
+                long nativePix = extras.getLong(EXTRA_NATIVE_PIX, 0);
                 boolean accessibilityMode = extras.getBoolean(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, false);
                 Intent result = new Intent();
                 result.putExtra(UPLOAD_IMAGE, false);
@@ -103,8 +124,57 @@ public class ImageUploadDialog extends Activity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Bundle extras = getIntent().getExtras();
-                long nativePix = extras.getLong(EXTRA_NATIVE_PIX,  0);
+                long nativePix = extras.getLong(EXTRA_NATIVE_PIX, 0);
                 boolean accessibilityMode = extras.getBoolean(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, false);
+                Pix mpix = new Pix(nativePix);
+                Bitmap bitmap = WriteFile.writeBitmap(mpix);
+                boolean download = false;
+
+                progressDialog = new ProgressDialog(ImageUploadDialog.this);
+                progressDialog.setMessage("Uploading, please wait...");
+                progressDialog.show();
+
+                //converting image to base64 string
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                byte[] imageBytes = baos.toByteArray();
+                final String imageString = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+                Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                final String imgref = new String("IMG" + timestamp.getTime() + (Math.random() * 100));
+                //  imgref = "IMG" + timestamp.getTime() + (Math.random() * 100);
+
+                //sending image to server
+                StringRequest request = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String s) {
+                        progressDialog.dismiss();
+                        if (s.equals("true")) {
+                            Toast.makeText(ImageUploadDialog.this, "Uploaded Successful", Toast.LENGTH_LONG).show();
+
+                        } else {
+                            Toast.makeText(ImageUploadDialog.this, "Some error occurred!", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Toast.makeText(ImageUploadDialog.this, "Some error occurred -> " + volleyError, Toast.LENGTH_LONG).show();
+                    }
+                }) {
+                    //adding parameters to send
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        Map<String, String> parameters = new HashMap<String, String>();
+                        //parameters.put("image", imageString);
+                        parameters.put("image", imageString);
+                        parameters.put("filename", imgref);
+                        return parameters;
+                    }
+                };
+
+                RequestQueue rQueue = Volley.newRequestQueue(ImageUploadDialog.this);
+                rQueue.add(request);
+
+
                 Intent result = new Intent();
                 result.putExtra(UPLOAD_IMAGE, true);
                 result.putExtra(EXTRA_NATIVE_PIX, nativePix);
