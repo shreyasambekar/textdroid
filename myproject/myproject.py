@@ -5,6 +5,9 @@ from werkzeug.datastructures import ImmutableMultiDict
 import base64
 from PIL import Image
 
+import cv2
+from image_processing import process_image
+
 app = Flask(__name__)
 
 
@@ -27,6 +30,10 @@ def uploadimg():
     with open(filepath, 'wb') as f:
         f.write(imgdata)
         f.close()
+    
+    processed_image = process_image(filepath)
+    
+    cv2.imwrite('result.jpg', processed_image)
     #try:
     #   with Image.open(filepath) as image:
     #        image.save("/home/hbubuntu/myproject/image/" + filename + ".jpg")
