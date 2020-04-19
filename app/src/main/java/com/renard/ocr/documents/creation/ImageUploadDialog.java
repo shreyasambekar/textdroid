@@ -91,16 +91,20 @@ import java.lang.Math;
 
 /*  Created by: Shreyas Ambekar on
         April 1, 2020
+    Modified by Hrishi Budhwant
+
 * */
 
 public class ImageUploadDialog extends Activity {
 
     int PICK_IMAGE_REQUEST = 111;
-    String URL ="http://192.168.0.8/file-upload";
+    String URL ="http://192.168.0.8:5000/file-upload";
     ProgressDialog progressDialog;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_imageupload);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Upload image?");
