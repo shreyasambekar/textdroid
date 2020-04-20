@@ -23,8 +23,19 @@ def process_image(filepath):
 	#Noise Removal using Median Blurring
 	DenoisedImage = cv2.medianBlur(grayScaleImage, 3)
 
+	#Shadow Removal
+	#img = cv2.imread('C:/Users/hp/Desktop/AndroidOCR/denoising-dirty-documents/test/test/1.png', -1)
+	rgb_planes = cv2.split(DenoisedImage) 
+	result_planes = []
+	for plane in rgb_planes:
+	    dilated_img = cv2.dilate(plane, np.ones((7,7), np.uint8))
+	    bg_img = cv2.medianBlur(dilated_img, 21)
+	    diff_img = 255 - cv2.absdiff(plane, bg_img)
+	    result_planes.append(diff_img)
+	result = cv2.merge(result_planes)
+
 	#Removal of Border
-	mask = np.zeros(DenoisedImage.shape, dtype=np.uint8)
+	mask = np.zeros(result.shape, dtype=np.uint8) #it was DenoisedImage earlier
 	cnts = cv2.findContours(DenoisedImage, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 	cnts = cnts[0] if len(cnts) == 2 else cnts[1]
 	cv2.fillPoly(mask, cnts, [255,255,255])
@@ -32,31 +43,31 @@ def process_image(filepath):
 	imageWithoutBorder = cv2.bitwise_or(DenoisedImage, mask)
 
 	#Image Binarisation
-	#binarisedImage = cv2.threshold(imageWithoutBorder, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+	binarisedImage = cv2.threshold(imageWithoutBorder, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
 
 	#Image Deskewing
-	#coords = np.column_stack(np.where(binarisedImage > 0))
-	#angle = cv2.minAreaRect(coords)[-1]
-	#if angle < -45:
-	#	angle = -(90 + angle)
-	#else:
-	#	angle = -angle
+	coords = np.column_stack(np.where(binarisedImage > 0))
+	angle = cv2.minAreaRect(coords)[-1]
+	if angle < -45:
+		angle = -(90 + angle)
+	else:
+		angle = -angle
 
-	#(h, w) = binarisedImage.shape[:2]
-	#center = (w // 2, h // 2)
-	#M = cv2.getRotationMatrix2D(center, angle, 1.0)
-	#rotatedImage = cv2.warpAffine(binarisedImage, M, (w, h), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
+	(h, w) = binarisedImage.shape[:2]
+	center = (w // 2, h // 2)
+	M = cv2.getRotationMatrix2D(center, angle, 1.0)
+	rotatedImage = cv2.warpAffine(binarisedImage, M, (w, h), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
 	
 	#cv2.putText(rotatedImage, "Angle: {:.2f} degrees".format(angle),
 	#	(10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 	#print("[INFO] angle: {:.3f}".format(angle))
 
 	#Image Inversion
-	#invertedImage = cv2.bitwise_not(binarisedImage) #it was rotated image earlier in the bracket... replace it later
+	invertedImage = cv2.bitwise_not(rotatedImage)
 
 	#Shadow Removal
 	#img = cv2.imread('C:/Users/hp/Desktop/AndroidOCR/denoising-dirty-documents/test/test/1.png', -1)
-	#rgb_planes = cv2.split(binarisedImage) #it was inverted image earlier
+	#rgb_planes = cv2.split(invertedImage)
 	#result_planes = []
 	#for plane in rgb_planes:
 	#    dilated_img = cv2.dilate(plane, np.ones((7,7), np.uint8))
@@ -64,7 +75,7 @@ def process_image(filepath):
 	#    diff_img = 255 - cv2.absdiff(plane, bg_img)
 	#    result_planes.append(diff_img)
 	#result = cv2.merge(result_planes)
-	return imageWithoutBorder
+	return invertedImage #it was return result earlier
 	
 	#cv2.imwrite('shadows_out.png', result)
 
