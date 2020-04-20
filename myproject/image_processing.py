@@ -5,6 +5,17 @@ from matplotlib import pyplot as plt
 import numpy as np
 import imutils
 
+def is_b_or_w(image, black_max_bgr=(40)):
+    # use this if you want to check channels are all basically equal
+    # I split this up into small steps to find out where your error is coming from
+    mean_bgr_float = np.mean(image, axis=(0,1))
+    mean_bgr_rounded = np.round(mean_bgr_float)
+    mean_bgr = mean_bgr_rounded.astype(np.uint8)
+    # use this if you just want a simple threshold for simple grayscale
+    # or if you want to use an HSV (V) measurement as in your example
+    mean_intensity = int(round(np.mean(image)))
+    return 'black' if np.all(mean_bgr < black_max_bgr) else 'white'
+
 def process_image(filepath):
 	#Image Rescaling
 	im = Image.open(filepath)
@@ -24,7 +35,6 @@ def process_image(filepath):
 	DenoisedImage = cv2.medianBlur(grayScaleImage, 3)
 
 	#Shadow Removal
-	#img = cv2.imread('C:/Users/hp/Desktop/AndroidOCR/denoising-dirty-documents/test/test/1.png', -1)
 	rgb_planes = cv2.split(DenoisedImage) 
 	result_planes = []
 	for plane in rgb_planes:
@@ -32,15 +42,15 @@ def process_image(filepath):
 	    bg_img = cv2.medianBlur(dilated_img, 21)
 	    diff_img = 255 - cv2.absdiff(plane, bg_img)
 	    result_planes.append(diff_img)
-	result = cv2.merge(result_planes)
+	shadowRemovedImg = cv2.merge(result_planes)
 
 	#Removal of Border
-	mask = np.zeros(result.shape, dtype=np.uint8) #it was DenoisedImage earlier
-	cnts = cv2.findContours(DenoisedImage, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+	mask = np.zeros(shadowRemovedImg.shape, dtype=np.uint8)
+	cnts = cv2.findContours(shadowRemovedImg, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 	cnts = cnts[0] if len(cnts) == 2 else cnts[1]
 	cv2.fillPoly(mask, cnts, [255,255,255])
 	mask = 255 - mask
-	imageWithoutBorder = cv2.bitwise_or(DenoisedImage, mask)
+	imageWithoutBorder = cv2.bitwise_or(shadowRemovedImg, mask)
 
 	#Image Binarisation
 	binarisedImage = cv2.threshold(imageWithoutBorder, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
@@ -52,32 +62,22 @@ def process_image(filepath):
 		angle = -(90 + angle)
 	else:
 		angle = -angle
-
 	(h, w) = binarisedImage.shape[:2]
 	center = (w // 2, h // 2)
 	M = cv2.getRotationMatrix2D(center, angle, 1.0)
 	rotatedImage = cv2.warpAffine(binarisedImage, M, (w, h), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
 	
-	#cv2.putText(rotatedImage, "Angle: {:.2f} degrees".format(angle),
-	#	(10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-	#print("[INFO] angle: {:.3f}".format(angle))
-
-	#Image Inversion
-	invertedImage = cv2.bitwise_not(rotatedImage)
-
-	#Shadow Removal
-	#img = cv2.imread('C:/Users/hp/Desktop/AndroidOCR/denoising-dirty-documents/test/test/1.png', -1)
-	#rgb_planes = cv2.split(invertedImage)
-	#result_planes = []
-	#for plane in rgb_planes:
-	#    dilated_img = cv2.dilate(plane, np.ones((7,7), np.uint8))
-	#    bg_img = cv2.medianBlur(dilated_img, 21)
-	#    diff_img = 255 - cv2.absdiff(plane, bg_img)
-	#    result_planes.append(diff_img)
-	#result = cv2.merge(result_planes)
-	return invertedImage #it was return result earlier
 	
-	#cv2.imwrite('shadows_out.png', result)
+	#Image Inversion
+	# perform image inversion only if it is white text on black background
+	# reason: Tesseract has better accuracy for black text on white background
+	if(is_b_or_w(rotatedImage) == 'black'):
+		result = cv2.bitwise_not(rotatedImage)
+		return result
+	else:
+		return rotatedImage
+	
+
 
 
 
