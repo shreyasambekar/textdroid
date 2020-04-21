@@ -131,7 +131,11 @@ public class ImageUploadDialog extends Activity {
                 long nativePix = extras.getLong(EXTRA_NATIVE_PIX, 0);
                 boolean accessibilityMode = extras.getBoolean(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, false);
                 Pix mpix = new Pix(nativePix);
+
+                Pix copiedPix = mpix.copy();
+
                 Bitmap bitmap = WriteFile.writeBitmap(mpix);
+
                 boolean download = false;
 
                 progressDialog = new ProgressDialog(ImageUploadDialog.this);
@@ -181,7 +185,7 @@ public class ImageUploadDialog extends Activity {
 
                 Intent result = new Intent();
                 result.putExtra(UPLOAD_IMAGE, true);
-                result.putExtra(EXTRA_NATIVE_PIX, nativePix);
+                result.putExtra(EXTRA_NATIVE_PIX, copiedPix.getNativePix());
                 result.putExtra(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, accessibilityMode);
                 setResult(RESULT_OK, result);
                 finish();
