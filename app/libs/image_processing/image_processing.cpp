@@ -196,7 +196,7 @@ extern "C" {
 
 
 
-    void Java_com_googlecode_tesseract_android_NativeBinding_nativeAnalyseLayout(JNIEnv *env, jobject thiz, jlong nativePix) {
+    void Java_com_googlecode_tesseract_android_NativeBinding_nativeAnalyseLayout(JNIEnv *env, jobject thiz, jlong nativePix/*Add extra boolean argument here*/) {
         LOGV(__FUNCTION__);
         Pix *pixOrg = (PIX *) nativePix;
         Pix* pixTextlines = NULL;
@@ -207,6 +207,11 @@ extern "C" {
 
         nat->sendMessage(MESSAGE_IMAGE_DETECTION);
 
+
+        /*  On the basis of the value of the boolean argument received,
+         *  insert if condition to execute the line below
+         *  Incorporate changes in the lines below for the Pix and NativePix values
+         *  */
         pixb = pixPrepareLayoutAnalysis(pixOrg, nat);
         
         nat->sendPix(pixb);

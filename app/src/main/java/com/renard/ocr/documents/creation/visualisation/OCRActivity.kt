@@ -80,6 +80,9 @@ class OCRActivity : MonitoredActivity(), LayoutChoseListener {
         val nativePix = intent.getLongExtra(DocumentGridActivity.EXTRA_NATIVE_PIX, -1)
         mParentId = intent.getIntExtra(EXTRA_PARENT_DOCUMENT_ID, -1)
 
+        /*  Extract the value of UPLOAD_IMAGE from the received intent here and assign it to
+        *   the boolean variable mUploadImage */
+
         mOCR = ViewModelProviders.of(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 return OCR(Pix(nativePix), application as TextFairyApplication) as T
@@ -171,9 +174,9 @@ class OCRActivity : MonitoredActivity(), LayoutChoseListener {
 
             if (layoutKind == LayoutKind.SIMPLE) {
                 mAnalytics.sendScreenView("Ocr")
-                mOCR.startOCRForSimpleLayout(this@OCRActivity, ocrLanguage, mImageView.width, mImageView.height)
+                mOCR.startOCRForSimpleLayout(this@OCRActivity, ocrLanguage, mImageView.width, mImageView.height/*Add one extra argument here mImageUpload*/)
             } else if (layoutKind == LayoutKind.COMPLEX) {
-                mOCR.startLayoutAnalysis(mImageView.width, mImageView.height)
+                mOCR.startLayoutAnalysis(mImageView.width, mImageView.height/*Add one extra boolean argument here mImageUpload*/)
             }
         }
     }

@@ -167,11 +167,11 @@ class OCR(val pix: Pix, application: TextFairyApplication) : AndroidViewModel(ap
      * native code takes care of the Pix, do not use it after calling this
      * function
      **/
-    fun startLayoutAnalysis(width: Int, height: Int) {
+    fun startLayoutAnalysis(width: Int, height: Int/*Add one extra boolean argument here*/) {
         mPreviewHeightUnScaled = height
         mPreviewWidthUnScaled = width
         mExecutorService.execute {
-            mNativeBinding.analyseLayout(pix)
+            mNativeBinding.analyseLayout(pix/*Pass the received boolean argument to this function*/)
         }
     }
 
@@ -255,7 +255,7 @@ class OCR(val pix: Pix, application: TextFairyApplication) : AndroidViewModel(ap
      * @param context used to access the file system
      * @param pix    source pix to do ocr on
      */
-    fun startOCRForSimpleLayout(context: Context, lang: String, width: Int, height: Int) {
+    fun startOCRForSimpleLayout(context: Context, lang: String, width: Int, height: Int/*Add one extra boolean argument here*/) {
         mPreviewHeightUnScaled = height
         mPreviewWidthUnScaled = width
 
@@ -264,6 +264,11 @@ class OCR(val pix: Pix, application: TextFairyApplication) : AndroidViewModel(ap
             try {
                 logMemory(context)
                 sendPreview(pix.nativePix)
+
+
+                /*  Don't execute the line below if image is uploaded to the server
+                *   Incorporate necessary changes in the lines below for the values of pix and nativePix
+                * */
 
                 val nativeTextPix = mNativeBinding.convertBookPage(pix)
 

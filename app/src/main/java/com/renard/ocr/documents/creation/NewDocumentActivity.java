@@ -395,6 +395,11 @@ public abstract class NewDocumentActivity extends MonitoredActivity {
                     mCameraResult = new CameraResult(requestCode, resultCode, data, ImageSource.PICK);
                     break;
                 case REQUEST_CODE_IMGUPLDLG:
+
+                    /*  Extract the UPLOAD_IMAGE boolean value from the received intent here
+                    *   and also send it to the OCRActivity
+                    * */
+
                     long nativePix = data.getLongExtra(EXTRA_NATIVE_PIX, 0);
                     boolean accessibilityMode = data.getBooleanExtra(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, false);
                     Toast.makeText(this, "In the new document activity", Toast.LENGTH_LONG).show();
