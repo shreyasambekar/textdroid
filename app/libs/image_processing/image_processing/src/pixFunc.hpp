@@ -22,7 +22,7 @@ Pix* run(Pix* pix, std::list<PIX_FUNC> funcs);
 Pix* run(Pix* pix, std::list<PIX_FUNC> funcs, ProgressCallback* callback);
 
 Pix* pixPrepareForOcr(Pix* pix, ProgressCallback* callback);
-Pix* pixPrepareLayoutAnalysis(Pix* pix, ProgressCallback* callback);
+Pix *pixPrepareLayoutAnalysis(Pix *pix, ProgressCallback *callback, unsigned char i);
 
 #ifdef HAS_ADAPTIVE_BINARIZER
 Pix* binarizeAdaptive(Pix* pix);

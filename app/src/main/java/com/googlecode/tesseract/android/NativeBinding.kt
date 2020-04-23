@@ -39,8 +39,8 @@ class NativeBinding {
         return combineSelectedPixa(nativePixaText, nativePixaImages, selectedTexts, selectedImages)
     }
 
-    fun analyseLayout(pixs: Pix/*Add one extra boolean argument here*/) {
-        nativeAnalyseLayout(pixs.nativePix/*Pass the received boolean argument here*/)
+    fun analyseLayout(pixs: Pix, upload_Image: Boolean/*Add one extra boolean argument here*/) {
+        nativeAnalyseLayout(pixs.nativePix, upload_Image/*Pass the received boolean argument here*/)
     }
 
     fun convertBookPage(pixs: Pix): Long {
@@ -95,7 +95,7 @@ class NativeBinding {
 
     private external fun combineSelectedPixa(nativePixaTexts: Long, nativePixaImages: Long, selectedTexts: IntArray, selectedImages: IntArray): LongArray
 
-    private external fun nativeAnalyseLayout(nativePix: Long/*Add boolean argument here to change the function definition*/)
+    private external fun nativeAnalyseLayout(nativePix: Long, upload_Image: Boolean/*Add boolean argument here to change the function definition*/)
 
     companion object {
 

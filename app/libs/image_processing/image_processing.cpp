@@ -196,7 +196,8 @@ extern "C" {
 
 
 
-    void Java_com_googlecode_tesseract_android_NativeBinding_nativeAnalyseLayout(JNIEnv *env, jobject thiz, jlong nativePix/*Add extra boolean argument here*/) {
+    void Java_com_googlecode_tesseract_android_NativeBinding_nativeAnalyseLayout(JNIEnv *env, jobject thiz, jlong nativePix/*Add extra boolean argument here*/,
+                                                                                 jboolean upload__Image) {
         LOGV(__FUNCTION__);
         Pix *pixOrg = (PIX *) nativePix;
         Pix* pixTextlines = NULL;
@@ -212,8 +213,9 @@ extern "C" {
          *  insert if condition to execute the line below
          *  Incorporate changes in the lines below for the Pix and NativePix values
          *  */
-        pixb = pixPrepareLayoutAnalysis(pixOrg, nat);
-        
+
+        pixb = pixPrepareLayoutAnalysis(pixOrg, nat, upload__Image);
+
         nat->sendPix(pixb);
 
         segmentComplexLayout(pixOrg, NULL, pixb, &pixaImages, &pixaTexts, nat, false);

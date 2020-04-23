@@ -23,6 +23,7 @@
 
 #ifdef ANDROID
 #include <android/log.h>
+#include <jni.h>
 
 #define printf(fmt,args...)  __android_log_print(ANDROID_LOG_INFO  ,"pixFunc", fmt, ##args)
 #define fprintf(file, fmt, args...)  __android_log_print(ANDROID_LOG_INFO  ,"pixFunc", fmt, ##args)
@@ -316,11 +317,14 @@ Pix* pixPrepareForOcr(Pix* pixOrg, ProgressCallback* callback) {
     return result;
 }
 
-Pix* pixPrepareLayoutAnalysis(Pix* pixOrg, ProgressCallback* callback) {
+Pix* pixPrepareLayoutAnalysis(Pix* pixOrg, ProgressCallback* callback, jboolean uploadImage) {
     FUNCNAME("pixPrepareLayoutAnalysis");
     auto binarizeWithCallback = [&](Pix* p){
         return binarize(p, callback);
     };
+    if(uploadImage){
+        return run(pixOrg, {binarizeWithCallback}, callback);
+    }
     return run(pixOrg, {convertTo8, findResolution, savGol, binarizeWithCallback}, callback);
 }
 
