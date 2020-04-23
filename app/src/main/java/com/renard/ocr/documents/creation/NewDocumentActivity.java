@@ -399,6 +399,7 @@ public abstract class NewDocumentActivity extends MonitoredActivity {
                     /*  Extract the UPLOAD_IMAGE boolean value from the received intent here
                     *   and also send it to the OCRActivity
                     * */
+                    boolean uploadImage = data.getBooleanExtra(UPLOAD_IMAGE, false);
 
                     long nativePix = data.getLongExtra(EXTRA_NATIVE_PIX, 0);
                     boolean accessibilityMode = data.getBooleanExtra(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, false);
@@ -407,6 +408,10 @@ public abstract class NewDocumentActivity extends MonitoredActivity {
                     intent.putExtra(EXTRA_NATIVE_PIX, nativePix);
                     intent.putExtra(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, accessibilityMode);
                     intent.putExtra(OCRActivity.EXTRA_PARENT_DOCUMENT_ID, getParentId());
+
+                    /*Added this line*/
+                    intent.putExtra(UPLOAD_IMAGE, uploadImage);
+
                     startActivityForResult(intent, REQUEST_CODE_OCR);
                     break;
             }

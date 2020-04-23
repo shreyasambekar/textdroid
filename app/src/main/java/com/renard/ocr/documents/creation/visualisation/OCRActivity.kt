@@ -41,6 +41,7 @@ import com.renard.ocr.MonitoredActivity
 import com.renard.ocr.PermissionGrantedEvent
 import com.renard.ocr.R
 import com.renard.ocr.TextFairyApplication
+import com.renard.ocr.documents.creation.NewDocumentActivity
 import com.renard.ocr.documents.creation.visualisation.LayoutQuestionDialog.LayoutChoseListener
 import com.renard.ocr.documents.creation.visualisation.LayoutQuestionDialog.LayoutKind
 import com.renard.ocr.documents.viewing.DocumentContentProvider
@@ -78,6 +79,9 @@ class OCRActivity : MonitoredActivity(), LayoutChoseListener {
         Screen.lockOrientation(this)
         EventBus.getDefault().register(this)
         val nativePix = intent.getLongExtra(DocumentGridActivity.EXTRA_NATIVE_PIX, -1)
+
+        val mUploadImage = intent.getBooleanExtra(NewDocumentActivity.UPLOAD_IMAGE, false)
+
         mParentId = intent.getIntExtra(EXTRA_PARENT_DOCUMENT_ID, -1)
 
         /*  Extract the value of UPLOAD_IMAGE from the received intent here and assign it to
@@ -174,7 +178,7 @@ class OCRActivity : MonitoredActivity(), LayoutChoseListener {
 
             if (layoutKind == LayoutKind.SIMPLE) {
                 mAnalytics.sendScreenView("Ocr")
-                mOCR.startOCRForSimpleLayout(this@OCRActivity, ocrLanguage, mImageView.width, mImageView.height/*Add one extra argument here mImageUpload*/)
+                mOCR.startOCRForSimpleLayout(this@OCRActivity, ocrLanguage, mImageView.width, mImageView.height, intent.getBooleanExtra(NewDocumentActivity.UPLOAD_IMAGE, false)/*Add one extra argument here mImageUpload*/)
             } else if (layoutKind == LayoutKind.COMPLEX) {
                 mOCR.startLayoutAnalysis(mImageView.width, mImageView.height/*Add one extra boolean argument here mImageUpload*/)
             }

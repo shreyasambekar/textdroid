@@ -255,7 +255,7 @@ class OCR(val pix: Pix, application: TextFairyApplication) : AndroidViewModel(ap
      * @param context used to access the file system
      * @param pix    source pix to do ocr on
      */
-    fun startOCRForSimpleLayout(context: Context, lang: String, width: Int, height: Int/*Add one extra boolean argument here*/) {
+    fun startOCRForSimpleLayout(context: Context, lang: String, width: Int, height: Int, uploadImage: Boolean/*Add one extra boolean argument here*/) {
         mPreviewHeightUnScaled = height
         mPreviewWidthUnScaled = width
 
@@ -270,11 +270,25 @@ class OCR(val pix: Pix, application: TextFairyApplication) : AndroidViewModel(ap
                 *   Incorporate necessary changes in the lines below for the values of pix and nativePix
                 * */
 
-                val nativeTextPix = mNativeBinding.convertBookPage(pix)
+                val pixText: Pix
+                val nativeTextPix: Long
+                if(uploadImage) {
+                    val pix2 = pix.copy()
 
-                sendPreview(nativeTextPix)
+                    nativeTextPix = pix2.nativePix
 
-                val pixText = Pix(nativeTextPix)
+                    sendPreview(nativeTextPix)
+
+                    pixText = Pix(nativeTextPix)
+                }
+                else {
+                    nativeTextPix = mNativeBinding.convertBookPage(pix)
+
+                    sendPreview(nativeTextPix)
+
+                    pixText = Pix(nativeTextPix)
+                }
+
                 ocrProgress.postValue(OcrProgress.Message(R.string.progress_ocr))
                 if (mStopped.get()) {
                     return@Runnable
