@@ -4,6 +4,8 @@ from werkzeug.utils import secure_filename
 from werkzeug.datastructures import ImmutableMultiDict
 import base64
 from PIL import Image
+from flask import send_file
+
 
 import cv2
 from image_processing import process_image
@@ -40,6 +42,7 @@ def uploadimg():
     #except:
     #    return "error in jpg save file"
     return "OK"
+
 
 
 if __name__ == "__main__":

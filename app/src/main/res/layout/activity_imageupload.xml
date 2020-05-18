@@ -11,4 +11,11 @@
         android:src="@drawable/image_upload"
         android:alpha=".75" />
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/myImageView"
+        android:contentDescription="Downloaded Image"
+        />
+
 </RelativeLayout>

@@ -1,6 +1,8 @@
 server {
     listen 80;
-    server_name 192.168.0.8;
+    server_name 192.168.0.10;
+
+    
 
     location / {
         include proxy_params;
@@ -28,6 +30,12 @@ server {
         
 	proxy_pass http://unix:/tmp/myproject.sock;
     }
+	
+	location ^~ /static/  {
+    		include  /etc/nginx/mime.types;
+    		root /home/shreyas/BTECHPROECT/myproject/;
+	}
+	
 
 }
 

@@ -1,5 +1,8 @@
 package com.renard.ocr.documents.creation;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.googlecode.tesseract.android.OCR;
 import com.renard.ocr.MonitoredActivity;
 import com.renard.ocr.R;
@@ -32,12 +35,15 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -55,6 +61,7 @@ import android.view.View;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -98,7 +105,7 @@ import java.lang.Math;
 public class ImageUploadDialog extends Activity {
 
     int PICK_IMAGE_REQUEST = 111;
-    String URL ="http://192.168.0.8:80/file-upload";
+    String URL ="http://192.168.0.10:80/file-upload";
     ProgressDialog progressDialog;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,11 +163,31 @@ public class ImageUploadDialog extends Activity {
                     @Override
                     public void onResponse(String s) {
                         progressDialog.dismiss();
-                        if (s.equals("true")) {
-                            Toast.makeText(ImageUploadDialog.this, "Uploaded Successful", Toast.LENGTH_LONG).show();
+                        if (s.equals("OK")) {
+                            final ImageView image = (ImageView) findViewById(R.id.myImageView);
+                            Glide.with(ImageUploadDialog.this)
+                                    .asBitmap()
+                                    .load("http://192.168.0.10:80/static/images/result.png")
+                                    .into(new SimpleTarget<Bitmap>(1024, 666) {
+                                        @Override
+                                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                                            image.setImageBitmap(resource);
+                                        }
+                                    });
+
+                            //Later launch activity from here Also change the first line in AndroidManifest.xml
+                            /*Toast.makeText(ImageUploadDialog.this, "Uploaded Successful", Toast.LENGTH_LONG).show();
+                            Intent result = new Intent();
+                            result.putExtra(UPLOAD_IMAGE, true);
+                            //Also change this copied pix
+                            result.putExtra(EXTRA_NATIVE_PIX, copiedPix.getNativePix());
+                            result.putExtra(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, accessibilityMode);
+                            setResult(RESULT_OK, result);
+                            finish();*/
 
                         } else {
                             Toast.makeText(ImageUploadDialog.this, "Some error occurred!", Toast.LENGTH_LONG).show();
+
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -183,12 +210,6 @@ public class ImageUploadDialog extends Activity {
                 rQueue.add(request);
 
 
-                Intent result = new Intent();
-                result.putExtra(UPLOAD_IMAGE, true);
-                result.putExtra(EXTRA_NATIVE_PIX, copiedPix.getNativePix());
-                result.putExtra(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, accessibilityMode);
-                setResult(RESULT_OK, result);
-                finish();
             }
         });
         AlertDialog alert = builder.create();
