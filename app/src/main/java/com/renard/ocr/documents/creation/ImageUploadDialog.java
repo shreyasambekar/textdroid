@@ -3,6 +3,7 @@ package com.renard.ocr.documents.creation;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.googlecode.leptonica.android.ReadFile;
 import com.googlecode.tesseract.android.OCR;
 import com.renard.ocr.MonitoredActivity;
 import com.renard.ocr.R;
@@ -18,6 +19,7 @@ import com.renard.ocr.pdf.Hocr2Pdf.PDFProgressListener;
 import com.renard.ocr.util.MemoryInfo;
 import com.renard.ocr.util.Util;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -40,6 +42,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
 import android.os.RemoteException;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -95,6 +98,7 @@ import com.android.volley.toolbox.Volley;
 
 import java.sql.Timestamp;
 import java.lang.Math;
+import java.util.concurrent.ExecutionException;
 
 /*  Created by: Shreyas Ambekar on
         April 1, 2020
@@ -105,7 +109,7 @@ import java.lang.Math;
 public class ImageUploadDialog extends Activity {
 
     int PICK_IMAGE_REQUEST = 111;
-    String URL ="http://192.168.0.10:80/file-upload";
+    String URL ="http://192.168.0.8:80/file-upload";
     ProgressDialog progressDialog;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,8 +143,6 @@ public class ImageUploadDialog extends Activity {
                 boolean accessibilityMode = extras.getBoolean(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, false);
                 Pix mpix = new Pix(nativePix);
 
-                Pix copiedPix = mpix.copy();
-
                 Bitmap bitmap = WriteFile.writeBitmap(mpix);
 
                 boolean download = false;
@@ -160,30 +162,77 @@ public class ImageUploadDialog extends Activity {
 
                 //sending image to server
                 StringRequest request = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+                    @SuppressLint("StaticFieldLeak") //Remove this line later
                     @Override
                     public void onResponse(String s) {
                         progressDialog.dismiss();
                         if (s.equals("OK")) {
+                            Toast.makeText(ImageUploadDialog.this, "Uploaded Successful", Toast.LENGTH_LONG).show();
                             final ImageView image = (ImageView) findViewById(R.id.myImageView);
-                            Glide.with(ImageUploadDialog.this)
+                            final Bitmap[] bmp = {null};
+                            new AsyncTask<Void, Void, Void>() {
+                                private static final String TAG = "STARTING_OCR_ACTIVITY";
+                                @Override
+                                protected Void doInBackground(Void... params) {
+                                    Looper.prepare();
+                                    try {
+                                        bmp[0] = Glide.
+                                                with(ImageUploadDialog.this).
+                                                asBitmap().
+                                                load("http://192.168.0.8:80/static/images/result.png").
+                                                into(1024, 666).
+                                                get();
+                                    } catch (final ExecutionException e) {
+                                        Log.e(TAG, e.getMessage());
+                                    } catch (final InterruptedException e) {
+                                        Log.e(TAG, e.getMessage());
+                                    }
+                                    return null;
+                                }
+                                @Override
+                                protected void onPostExecute(Void dummy) {
+                                    if (null != bmp[0]) {
+                                        // The full bitmap should be available here
+                                        //image.setImageBitmap(bmp[0]);
+                                        Log.d(TAG, "Image loaded");
+                                        Pix pix = ReadFile.readBitmap(bmp[0]);
+                                        Pix copiedPix = pix.copy();
+                                        Intent result = new Intent();
+                                        result.putExtra(UPLOAD_IMAGE, true);
+                                        //Also change this copied pix
+                                        result.putExtra(EXTRA_NATIVE_PIX, copiedPix.getNativePix());
+                                        result.putExtra(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, accessibilityMode);
+                                        setResult(RESULT_OK, result);
+                                        finish();
+                                    };
+                                }
+                            }.execute();
+
+
+
+
+
+
+
+                            /*Glide.with(ImageUploadDialog.this)
                                     .asBitmap()
-                                    .load("http://192.168.0.10:80/static/images/result.png")
+                                    .load("http://192.168.0.8:80/static/images/result.png")
                                     .into(new SimpleTarget<Bitmap>(1024, 666) {
                                         @Override
                                         public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                                             image.setImageBitmap(resource);
+                                            Bitmap bmp = resource.copy(resource.getConfig(), true);
+                                            Pix pix = ReadFile.readBitmap(bmp);
+                                            Pix copiedPix = pix.copy();
+                                            Intent result = new Intent();
+                                            result.putExtra(UPLOAD_IMAGE, true);
+                                            //Also change this copied pix
+                                            result.putExtra(EXTRA_NATIVE_PIX, copiedPix.getNativePix());
+                                            result.putExtra(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, accessibilityMode);
+                                            setResult(RESULT_OK, result);
+                                            finish();
                                         }
-                                    });
-
-                            //Later launch activity from here Also change the first line in AndroidManifest.xml
-                            /*Toast.makeText(ImageUploadDialog.this, "Uploaded Successful", Toast.LENGTH_LONG).show();
-                            Intent result = new Intent();
-                            result.putExtra(UPLOAD_IMAGE, true);
-                            //Also change this copied pix
-                            result.putExtra(EXTRA_NATIVE_PIX, copiedPix.getNativePix());
-                            result.putExtra(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, accessibilityMode);
-                            setResult(RESULT_OK, result);
-                            finish();*/
+                                    });*/
 
                         } else {
                             Toast.makeText(ImageUploadDialog.this, "Some error occurred!", Toast.LENGTH_LONG).show();
