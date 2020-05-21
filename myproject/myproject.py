@@ -48,7 +48,7 @@ def uploadimg():
     invertedImage = Inversion(binarisedImage, color)
     saveImage(invertedImage, filename, 'static/processed_images')
     
-    return "OK"
+    return filename
 
 
 if __name__ == "__main__":

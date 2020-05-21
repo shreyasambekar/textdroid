@@ -166,10 +166,10 @@ public class ImageUploadDialog extends Activity {
                     @Override
                     public void onResponse(String s) {
                         progressDialog.dismiss();
-                        if (s.equals("OK")) {
+                        if (s.equals(imgref)) {
                             Toast.makeText(ImageUploadDialog.this, "Uploaded Successful", Toast.LENGTH_LONG).show();
                             final ImageView image = (ImageView) findViewById(R.id.myImageView);
-                            final Bitmap[] bmp = {null};
+                           /* final Bitmap[] bmp = {null};
                             new AsyncTask<Void, Void, Void>() {
                                 private static final String TAG = "STARTING_OCR_ACTIVITY";
                                 @Override
@@ -206,7 +206,7 @@ public class ImageUploadDialog extends Activity {
                                         finish();
                                     };
                                 }
-                            }.execute();
+                            }.execute();*/
 
 
 
@@ -214,13 +214,13 @@ public class ImageUploadDialog extends Activity {
 
 
 
-                            /*Glide.with(ImageUploadDialog.this)
+                            Glide.with(ImageUploadDialog.this)
                                     .asBitmap()
-                                    .load("http://192.168.0.8:80/static/images/result.png")
-                                    .into(new SimpleTarget<Bitmap>(1024, 666) {
+                                    .load("http://192.168.0.8:80/static/processed_images/" + imgref + ".png")
+                                    .into(new SimpleTarget<Bitmap>() {
                                         @Override
                                         public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                                            image.setImageBitmap(resource);
+                                            image.setImageBitmap(resource);/*
                                             Bitmap bmp = resource.copy(resource.getConfig(), true);
                                             Pix pix = ReadFile.readBitmap(bmp);
                                             Pix copiedPix = pix.copy();
@@ -230,19 +230,22 @@ public class ImageUploadDialog extends Activity {
                                             result.putExtra(EXTRA_NATIVE_PIX, copiedPix.getNativePix());
                                             result.putExtra(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, accessibilityMode);
                                             setResult(RESULT_OK, result);
-                                            finish();
+                                            finish();*/
                                         }
-                                    });*/
+                                    });
 
                         } else {
                             Toast.makeText(ImageUploadDialog.this, "Some error occurred!", Toast.LENGTH_LONG).show();
-
+                            progressDialog.dismiss();
+                            finish();
                         }
                     }
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         Toast.makeText(ImageUploadDialog.this, "Some error occurred -> " + volleyError, Toast.LENGTH_LONG).show();
+                        progressDialog.dismiss();
+                        finish();
                     }
                 }) {
                     //adding parameters to send
