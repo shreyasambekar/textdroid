@@ -322,9 +322,9 @@ Pix* pixPrepareLayoutAnalysis(Pix* pixOrg, ProgressCallback* callback, jboolean 
     auto binarizeWithCallback = [&](Pix* p){
         return binarize(p, callback);
     };
-    if(uploadImage){
-        return run(pixOrg, {binarizeWithCallback}, callback);
-    }
+    /*if(uploadImage){
+        return run(pixOrg, {convertTo8, findResolution, savGol, binarizeWithCallback}, callback);
+    }*/
     return run(pixOrg, {convertTo8, findResolution, savGol, binarizeWithCallback}, callback);
 }
 
