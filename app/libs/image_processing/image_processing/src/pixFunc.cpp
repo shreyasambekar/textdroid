@@ -312,7 +312,8 @@ Pix* pixPrepareForOcr(Pix* pixOrg, ProgressCallback* callback) {
     auto binarizeWithCallback = [&](Pix* p){
         return binarize(p, callback);
     };
-    Pix* result = run(pixOrg, {convertTo8, findResolution, savGol, binarizeWithCallback , ensure150dpi, dewarpOrDeskew});
+    Pix *result;
+    result = run(pixOrg, {convertTo8, findResolution, savGol, binarizeWithCallback, ensure150dpi, dewarpOrDeskew});
     FUNCNAME("pixPrepareForOcr");
     return result;
 }
@@ -322,10 +323,9 @@ Pix* pixPrepareLayoutAnalysis(Pix* pixOrg, ProgressCallback* callback, jboolean 
     auto binarizeWithCallback = [&](Pix* p){
         return binarize(p, callback);
     };
-    /*if(uploadImage){
-        return run(pixOrg, {convertTo8, findResolution, savGol, binarizeWithCallback}, callback);
-    }*/
-    return run(pixOrg, {convertTo8, findResolution, savGol, binarizeWithCallback}, callback);
+    Pix *result;
+    result = run(pixOrg, {convertTo8, findResolution, savGol, binarizeWithCallback}, callback);
+    return result;
 }
 
 Pix* run(Pix* pix, std::list<PIX_FUNC> funcs, ProgressCallback* callback) {

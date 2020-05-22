@@ -289,6 +289,7 @@ class OCR(val pix: Pix, application: TextFairyApplication) : AndroidViewModel(ap
                     pixText = Pix(nativeTextPix)
                 }
 
+
                 ocrProgress.postValue(OcrProgress.Message(R.string.progress_ocr))
                 if (mStopped.get()) {
                     return@Runnable
