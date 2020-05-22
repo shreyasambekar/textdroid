@@ -1,4 +1,4 @@
-package com.renard.ocr.documents.creation;
+/*package com.renard.ocr.documents.creation;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -98,7 +98,7 @@ import com.android.volley.toolbox.Volley;
 
 import java.sql.Timestamp;
 import java.lang.Math;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutionException;*/
 
 /*  Created by: Shreyas Ambekar on
         April 1, 2020
@@ -106,7 +106,7 @@ import java.util.concurrent.ExecutionException;
 
 * */
 
-public class ImageUploadDialog extends Activity {
+/*public class ImageUploadDialog extends Activity {
 
     int PICK_IMAGE_REQUEST = 111;
     String URL ="http://192.168.0.8:80/file-upload";
@@ -168,7 +168,7 @@ public class ImageUploadDialog extends Activity {
                         progressDialog.dismiss();
                         if (s.equals(imgref)) {
                             Toast.makeText(ImageUploadDialog.this, "Uploaded Successful", Toast.LENGTH_LONG).show();
-                            final ImageView image = (ImageView) findViewById(R.id.myImageView);
+                            final ImageView image = (ImageView) findViewById(R.id.myImageView);*/
                            /* final Bitmap[] bmp = {null};
                             new AsyncTask<Void, Void, Void>() {
                                 private static final String TAG = "STARTING_OCR_ACTIVITY";
@@ -214,7 +214,7 @@ public class ImageUploadDialog extends Activity {
 
 
 
-                            Glide.with(ImageUploadDialog.this)
+                          /*  Glide.with(ImageUploadDialog.this)
                                     .asBitmap()
                                     .load("http://192.168.0.8:80/static/processed_images/" + imgref + ".png")
                                     .into(new SimpleTarget<Bitmap>() {
@@ -231,7 +231,7 @@ public class ImageUploadDialog extends Activity {
                                             result.putExtra(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, accessibilityMode);
                                             setResult(RESULT_OK, result);
                                             finish();*/
-                                        }
+                                     /*   }
                                     });
 
                         } else {
@@ -279,5 +279,367 @@ public class ImageUploadDialog extends Activity {
     protected void onDestroy() {
         super.onDestroy();
     }
+
+}*/
+
+
+
+package com.renard.ocr.documents.creation;
+
+import com.googlecode.leptonica.android.ReadFile;
+import com.googlecode.tesseract.android.OCR;
+import com.googlecode.tesseract.android.OcrProgress;
+import com.renard.ocr.MonitoredActivity;
+import com.renard.ocr.R;
+import com.renard.ocr.documents.creation.crop.CropImageActivity;
+import com.renard.ocr.documents.creation.visualisation.OCRActivity;
+import com.renard.ocr.documents.creation.NewDocumentActivity;
+import com.renard.ocr.documents.viewing.DocumentContentProvider;
+import com.renard.ocr.documents.viewing.DocumentContentProvider.Columns;
+import com.renard.ocr.documents.viewing.grid.DocumentGridActivity;
+import com.renard.ocr.documents.viewing.single.DocumentActivity;
+import com.renard.ocr.pdf.Hocr2Pdf;
+import com.renard.ocr.pdf.Hocr2Pdf.PDFProgressListener;
+import com.renard.ocr.util.MemoryInfo;
+import com.renard.ocr.util.Util;
+
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
+import android.content.ContentProviderClient;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.RemoteException;
+import android.provider.MediaStore;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.FileProvider;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.accessibility.AccessibilityManagerCompat;
+import android.text.Html;
+import android.text.Spanned;
+import android.util.Base64;
+import android.util.Log;
+import android.util.Pair;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.accessibility.AccessibilityManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
+import static com.renard.ocr.documents.creation.NewDocumentActivity.EXTRA_NATIVE_PIX;
+import static com.renard.ocr.documents.creation.NewDocumentActivity.UPLOAD_IMAGE;
+import static java.lang.Thread.sleep;
+
+import com.googlecode.leptonica.android.WriteFile;
+import com.googlecode.leptonica.android.Pix;
+import java.lang.Object;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import java.sql.Timestamp;
+import java.lang.Math;
+import android.os.Handler;
+
+public class ImageUploadDialog extends Activity {
+
+    int PICK_IMAGE_REQUEST = 111;
+    String URLupload = "http://192.168.0.8:80/file-upload";
+    String URLdownload = "http://192.168.0.8:80/file-download";
+    ProgressDialog progressDialog;
+    String imgresp = "demo";
+    Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+    final String imgref = new String("IMG" + timestamp.getTime() + (Math.random() * 100));
+    boolean download = false;
+
+
+    public void setImgresp(String imgresp) {
+        this.imgresp = imgresp;
+    }
+
+    public String getImgresp() {
+        return imgresp;
+    }
+
+
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_imageupload);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Upload image?");
+        builder.setTitle("Upload image?");
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Bundle extras = getIntent().getExtras();
+                long nativePix = extras.getLong(EXTRA_NATIVE_PIX, 0);
+                boolean accessibilityMode = extras.getBoolean(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, false);
+                Intent result = new Intent();
+                result.putExtra(UPLOAD_IMAGE, false);
+                result.putExtra(EXTRA_NATIVE_PIX, nativePix);
+                result.putExtra(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, accessibilityMode);
+                setResult(RESULT_OK, result);
+                finish();
+            }
+        });
+
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Bundle extras = getIntent().getExtras();
+                long nativePix = extras.getLong(EXTRA_NATIVE_PIX, 0);
+                boolean accessibilityMode = extras.getBoolean(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, false);
+                Pix mpix = new Pix(nativePix);
+                boolean uploadStatus = false;
+
+
+                //call upload method
+                //uploadStatus = fileUpload();
+
+                /*ProgressDialog processingdialog = ProgressDialog.show(ImageUploadDialog.this, "", "Processing...", true);
+                processingdialog.show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        processingdialog.dismiss();
+                    }
+                }, 5000);
+                */
+                if (true) {
+                    fileUpload(new ListenerInterface() {
+                        @Override
+                        public void listenermethod(String response) {
+                            //setImgresp(response);
+                         //   Toast.makeText(ImageUploadDialog.this, response, Toast.LENGTH_LONG).show();
+                            imgresp = response;
+                            byte[] bajpeg = Base64.decode(imgresp, Base64.DEFAULT);
+                            Bitmap bitmap = BitmapFactory.decodeByteArray(bajpeg, 0, bajpeg.length);
+                            Pix pix = ReadFile.readBitmap(bitmap);
+                            long nativePixnew = pix.getNativePix();
+
+                            Intent result = new Intent();
+                            result.putExtra(UPLOAD_IMAGE, true);
+                            result.putExtra(EXTRA_NATIVE_PIX, nativePixnew);
+                            result.putExtra(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, accessibilityMode);
+                            setResult(RESULT_OK, result);
+                            finish();
+                        }
+                    });
+
+                    //String encimg = imgresp;
+                    /*byte[] bajpeg = Base64.decode(imgresp, Base64.DEFAULT);
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bajpeg, 0, bajpeg.length);
+                    Pix pix = ReadFile.readBitmap(bitmap);
+                    nativePix = pix.getNativePix();
+
+                    Intent result = new Intent();
+                    result.putExtra(UPLOAD_IMAGE, true);
+                    result.putExtra(EXTRA_NATIVE_PIX, nativePix);
+                    result.putExtra(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, accessibilityMode);
+                    setResult(RESULT_OK, result);
+                    finish();*/
+                }
+
+
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.setCanceledOnTouchOutside(false);
+        alert.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        setResult(RESULT_CANCELED);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    protected boolean fileUpload(ListenerInterface listener) {
+        Bundle extras = getIntent().getExtras();
+        long nativePix = extras.getLong(EXTRA_NATIVE_PIX, 0);
+        boolean accessibilityMode = extras.getBoolean(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, false);
+        Pix mpix = new Pix(nativePix);
+        Bitmap bitmap = WriteFile.writeBitmap(mpix);
+
+        progressDialog = new ProgressDialog(ImageUploadDialog.this);
+        progressDialog.setMessage("Uploading, please wait...");
+        progressDialog.show();
+
+        //converting image to base64 string
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] imageBytes = baos.toByteArray();
+        final String imageString = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+
+        //sending image to server
+        StringRequest request = new StringRequest(Request.Method.POST, URLupload, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                progressDialog.dismiss();
+                if (s.equals("OK")) {
+                    Toast.makeText(ImageUploadDialog.this, "Uploaded Successfully", Toast.LENGTH_LONG).show();
+                    download = true;
+                } else {
+                    Toast.makeText(ImageUploadDialog.this, "Some error occurred!", Toast.LENGTH_LONG).show();
+
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Toast.makeText(ImageUploadDialog.this, "Some error occurred -> " + volleyError, Toast.LENGTH_LONG).show();
+            }
+        }) {
+            //adding parameters to send
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parameters = new HashMap<String, String>();
+                //parameters.put("image", imageString);
+                parameters.put("image", imageString);
+                parameters.put("filename", imgref);
+                return parameters;
+            }
+        };
+
+        RequestQueue rQueue = Volley.newRequestQueue(this);
+        rQueue.add(request);
+        progressDialog.dismiss();
+
+        String resp;
+
+
+        //sending image to server
+        StringRequest request2 = new StringRequest(Request.Method.POST, URLdownload, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                progressDialog.dismiss();
+                if (s.equals("Download error")) {
+                    Toast.makeText(ImageUploadDialog.this, "Download error occured", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(ImageUploadDialog.this, "Processing Completed", Toast.LENGTH_LONG).show();
+                    listener.listenermethod(s);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Toast.makeText(ImageUploadDialog.this, "Some error occurred -> " + volleyError, Toast.LENGTH_LONG).show();
+            }
+        }) {
+            //adding parameters to send
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parameters = new HashMap<String, String>();
+                //parameters.put("image", imageString);
+                parameters.put("filename", imgref);
+                return parameters;
+            }
+        };
+        //RequestQueue rQueue = Volley.newRequestQueue(this);
+        rQueue.add(request2);
+        try {
+            sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    /*protected void fileDownload(ListenerInterface listener){
+        //Bundle extras = getIntent().getExtras();
+        //long nativePix = extras.getLong(EXTRA_NATIVE_PIX, 0);
+        //boolean accessibilityMode = extras.getBoolean(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, false);
+        //Pix mpix = new Pix(nativePix);
+        //Bitmap bitmap = WriteFile.writeBitmap(mpix);
+
+        String resp;
+
+
+        //sending image to server
+        StringRequest request = new StringRequest(Request.Method.POST, URLdownload, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                progressDialog.dismiss();
+                if (s.equals("Download error")) {
+                    Toast.makeText(ImageUploadDialog.this, "Download error occured", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(ImageUploadDialog.this, "Processing Completed", Toast.LENGTH_LONG).show();
+                    listener.listenermethod(s);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Toast.makeText(ImageUploadDialog.this, "Some error occurred -> " + volleyError, Toast.LENGTH_LONG).show();
+            }
+        }) {
+            //adding parameters to send
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parameters = new HashMap<String, String>();
+                //parameters.put("image", imageString);
+                parameters.put("filename", imgref);
+                return parameters;
+            }
+        };
+        //RequestQueue rQueue = Volley.newRequestQueue(this);
+        rQueue.add(request);
+
+        /*new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(ImageUploadDialog.this, "Loading Results", Toast.LENGTH_LONG).show();
+            }
+        }, 2000);*/
+        /*byte [] bajpeg = Base64.decode(getImgresp(), Base64.DEFAULT);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bajpeg, 0 , bajpeg.length);
+        Pix pix = ReadFile.readBitmap(bitmap);
+        nativePix = pix.getNativePix();
+        return nativePix;*/
+
 
 }

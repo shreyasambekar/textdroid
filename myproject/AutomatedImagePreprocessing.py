@@ -28,8 +28,8 @@ def imageRescaling(img, img_ref) :
     factor = min(1, float(1024.0 / length_x))
     size = int(factor * length_x), int(factor * width_y)
     imgResult = img.resize(size, Image.ANTIALIAS).convert('RGB')
-    name = '/home/shreyas/BTECHPROECT/myproject/RescaledImages/' + img_ref + '.png'
-    imgResult.save(name, 'PNG')
+    name = '/home/shreyas/BTECHPROECT/myproject/RescaledImages/' + img_ref + '.jpg'
+    imgResult.save(name, 'JPEG')
     return name
 
 
@@ -135,8 +135,8 @@ def saveImage(img, img_ref, folder) :
     factor = min(1, float(1024.0 / length_x))
     size = int(factor * length_x), int(factor * width_y)
     image = img.resize(size, Image.ANTIALIAS)
-    name = '/home/shreyas/BTECHPROECT/myproject/' + folder + '/' + img_ref + '.png'
-    image.save(name, 'PNG')
+    name = '/home/shreyas/BTECHPROECT/myproject/' + folder + '/' + img_ref + '.jpg'
+    image.save(name, 'JPEG')
 
 
 # In[187]:

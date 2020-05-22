@@ -27,6 +27,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.RemoteException
+import android.support.annotation.Nullable
 import android.text.format.DateFormat
 import android.view.View
 import android.widget.Button
@@ -68,7 +69,7 @@ class OCRActivity : MonitoredActivity(), LayoutChoseListener {
     @BindView(R.id.column_pick_completed)
     lateinit var mButtonStartOCR: Button
     @BindView(R.id.progress_image)
-    lateinit var mImageView: OCRImageView
+    @Nullable lateinit var mImageView: OCRImageView
 
     private var mOcrLanguage: String? = null
     private lateinit var mOCR: OCR
