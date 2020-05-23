@@ -318,7 +318,7 @@ Pix* pixPrepareForOcr(Pix* pixOrg, ProgressCallback* callback) {
     return result;
 }
 
-Pix* pixPrepareLayoutAnalysis(Pix* pixOrg, ProgressCallback* callback, jboolean uploadImage) {
+Pix* pixPrepareLayoutAnalysis(Pix* pixOrg, ProgressCallback* callback) {
     FUNCNAME("pixPrepareLayoutAnalysis");
     auto binarizeWithCallback = [&](Pix* p){
         return binarize(p, callback);

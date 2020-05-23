@@ -196,8 +196,7 @@ extern "C" {
 
 
 
-    void Java_com_googlecode_tesseract_android_NativeBinding_nativeAnalyseLayout(JNIEnv *env, jobject thiz, jlong nativePix/*Add extra boolean argument here*/,
-                                                                                 jboolean upload__Image) {
+    void Java_com_googlecode_tesseract_android_NativeBinding_nativeAnalyseLayout(JNIEnv *env, jobject thiz, jlong nativePix/*Add extra boolean argument here*/) {
         LOGV(__FUNCTION__);
         Pix *pixOrg = (PIX *) nativePix;
         Pix* pixTextlines = NULL;
@@ -214,7 +213,7 @@ extern "C" {
          *  Incorporate changes in the lines below for the Pix and NativePix values
          *  */
 
-        pixb = pixPrepareLayoutAnalysis(pixOrg, nat, upload__Image);
+        pixb = pixPrepareLayoutAnalysis(pixOrg, nat);
 
         nat->sendPix(pixb);
 

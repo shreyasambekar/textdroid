@@ -167,11 +167,11 @@ class OCR(val pix: Pix, application: TextFairyApplication) : AndroidViewModel(ap
      * native code takes care of the Pix, do not use it after calling this
      * function
      **/
-    fun startLayoutAnalysis(width: Int, height: Int, upload_Image: Boolean/*Add one extra boolean argument here*/) {
+    fun startLayoutAnalysis(width: Int, height: Int/*Add one extra boolean argument here*/) {
         mPreviewHeightUnScaled = height
         mPreviewWidthUnScaled = width
         mExecutorService.execute {
-            mNativeBinding.analyseLayout(pix, upload_Image/*Pass the received boolean argument to this function*/)
+            mNativeBinding.analyseLayout(pix/*Pass the received boolean argument to this function*/)
         }
     }
 

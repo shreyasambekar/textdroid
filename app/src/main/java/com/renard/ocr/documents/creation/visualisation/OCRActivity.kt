@@ -181,7 +181,7 @@ class OCRActivity : MonitoredActivity(), LayoutChoseListener {
                 mAnalytics.sendScreenView("Ocr")
                 mOCR.startOCRForSimpleLayout(this@OCRActivity, ocrLanguage, mImageView.width, mImageView.height, intent.getBooleanExtra(NewDocumentActivity.UPLOAD_IMAGE, false)/*Add one extra argument here mImageUpload*/)
             } else if (layoutKind == LayoutKind.COMPLEX) {
-                mOCR.startLayoutAnalysis(mImageView.width, mImageView.height, intent.getBooleanExtra(NewDocumentActivity.UPLOAD_IMAGE, false)/*Add one extra boolean argument here mImageUpload*/)
+                mOCR.startLayoutAnalysis(mImageView.width, mImageView.height)
             }
         }
     }
