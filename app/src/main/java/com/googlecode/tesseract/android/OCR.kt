@@ -202,7 +202,7 @@ class OCR(val pix: Pix, application: TextFairyApplication) : AndroidViewModel(ap
 
                 if (!initTessApi(
                                 languages = determineOcrLanguage(lang),
-                                ocrMode = TessBaseAPI.OEM_TESSERACT_ONLY
+                                ocrMode = TessBaseAPI.OEM_LSTM_ONLY
                         )
                 ) {
                     return@Runnable
@@ -296,7 +296,7 @@ class OCR(val pix: Pix, application: TextFairyApplication) : AndroidViewModel(ap
                 }
 
                 val ocrLanguages = determineOcrLanguage(lang)
-                if (!initTessApi(ocrLanguages, TessBaseAPI.OEM_TESSERACT_ONLY)) {
+                if (!initTessApi(ocrLanguages, TessBaseAPI.OEM_LSTM_ONLY)) {
                     return@Runnable
                 }
 

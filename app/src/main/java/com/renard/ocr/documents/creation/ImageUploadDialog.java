@@ -384,8 +384,8 @@ import android.os.Handler;
 public class ImageUploadDialog extends Activity {
 
     int PICK_IMAGE_REQUEST = 111;
-    String URLupload = "http://192.168.0.8:80/file-upload";
-    String URLdownload = "http://192.168.0.8:80/file-download";
+    String URLupload = "http://13.235.245.117:80/file-upload";
+    String URLdownload = "http://13.235.245.117:80/file-download";
     ProgressDialog progressDialog;
     String imgresp = "demo";
     Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -408,7 +408,7 @@ public class ImageUploadDialog extends Activity {
         setContentView(R.layout.activity_imageupload);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Upload image?");
+        builder.setMessage("Do you want to upload the image for preprocessing for better accuracy?");
         builder.setTitle("Upload image?");
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override

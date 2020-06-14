@@ -313,7 +313,7 @@ public class TessBaseAPI {
      * @return <code>true</code> on success
      */
     public boolean init(String datapath, String language) {
-        return init(datapath, language, OEM_DEFAULT);
+        return init(datapath, language, OEM_LSTM_ONLY);
     }
 
     /**
