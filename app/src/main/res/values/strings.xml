@@ -46,8 +46,7 @@
     <string name="ocr_language_delete">Delete</string>
     <string name="ocr_language_title">Manage Languages</string>
     <string name="pref_summary_rate">Rate the text fairy</string>
-    <string name="pref_summary_license">Learn about the software that was used to create the Text
-        Fairy.
+    <string name="pref_summary_license">Learn about the software that was used to create the Textdroid.
     </string>
     <string name="pref_summary_contact">Learn about the creator and supply feedback.</string>
     <string name="pref_title_help">Show tips</string>

@@ -76,6 +76,10 @@
         <item>lao Lao</item>
         <item>mya Burmese</item>
         <item>khm Khmer</item>
+        <item>san Sanskrit</item>
+        <item>nep Nepali</item>
+        <item>Devanagari Devanagari</item>
+
     </string-array>
 
 </resources>

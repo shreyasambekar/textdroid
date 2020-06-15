@@ -583,7 +583,7 @@ public class ImageUploadDialog extends Activity {
         //RequestQueue rQueue = Volley.newRequestQueue(this);
         rQueue.add(request2);
         try {
-            sleep(2000);
+            sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
