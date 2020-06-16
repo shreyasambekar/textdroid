@@ -3,19 +3,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:scaleType="fitXY"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:src="@drawable/image_upload"
-        android:alpha=".75" />
-
-    <ImageView
+    <ProgressBar
+        android:id="@+id/pBar"
+        style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/myImageView"
-        android:contentDescription="Downloaded Image"
-        />
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
+        android:indeterminateTint="#FF8229"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/text_view_id"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/processing_image"
+        android:textColor="@android:color/white"
+        android:visibility="gone"
+        android:layout_below="@id/pBar"
+        android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>
