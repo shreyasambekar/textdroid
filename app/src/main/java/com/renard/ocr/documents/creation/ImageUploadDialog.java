@@ -344,6 +344,7 @@ import android.view.View;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -391,6 +392,8 @@ public class ImageUploadDialog extends Activity {
     Timestamp timestamp = new Timestamp(System.currentTimeMillis());
     final String imgref = new String("IMG" + timestamp.getTime() + (Math.random() * 100));
     boolean download = false;
+    private ProgressBar pgsBar;
+    private TextView txtview;
 
 
     public void setImgresp(String imgresp) {
@@ -406,7 +409,8 @@ public class ImageUploadDialog extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_imageupload);
-
+        pgsBar = (ProgressBar) findViewById(R.id.pBar);
+        txtview = (TextView) findViewById(R.id.text_view_id);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Do you want to upload the image for preprocessing for better accuracy?");
         builder.setTitle("Upload image?");
@@ -448,11 +452,16 @@ public class ImageUploadDialog extends Activity {
                 }, 5000);
                 */
                 if (true) {
+                    pgsBar.setVisibility(View.VISIBLE);
+                    txtview.setVisibility(View.VISIBLE);
                     fileUpload(new ListenerInterface() {
                         @Override
                         public void listenermethod(String response) {
                             //setImgresp(response);
                          //   Toast.makeText(ImageUploadDialog.this, response, Toast.LENGTH_LONG).show();
+                            pgsBar.setVisibility(View.GONE);
+                            txtview.setVisibility(View.GONE);
+                            Toast.makeText(ImageUploadDialog.this, "Processing complete", Toast.LENGTH_LONG).show();
                             imgresp = response;
                             byte[] bajpeg = Base64.decode(imgresp, Base64.DEFAULT);
                             Bitmap bitmap = BitmapFactory.decodeByteArray(bajpeg, 0, bajpeg.length);
