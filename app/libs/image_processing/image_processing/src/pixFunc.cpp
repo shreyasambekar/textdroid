@@ -328,6 +328,8 @@ Pix* pixPrepareLayoutAnalysis(Pix* pixOrg, ProgressCallback* callback) {
     return result;
 }
 
+
+
 Pix* run(Pix* pix, std::list<PIX_FUNC> funcs, ProgressCallback* callback) {
     Pix* pixConverted = pixClone(pix);
     for (auto &func : funcs) {

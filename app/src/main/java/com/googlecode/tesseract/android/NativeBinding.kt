@@ -47,6 +47,8 @@ class NativeBinding {
         return nativeOCRBook(pixs.nativePix)
     }
 
+
+
     /**
      * called from native code
      */

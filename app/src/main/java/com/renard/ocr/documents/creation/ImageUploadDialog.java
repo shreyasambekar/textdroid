@@ -435,22 +435,9 @@ public class ImageUploadDialog extends Activity {
                 Bundle extras = getIntent().getExtras();
                 long nativePix = extras.getLong(EXTRA_NATIVE_PIX, 0);
                 boolean accessibilityMode = extras.getBoolean(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, false);
-                Pix mpix = new Pix(nativePix);
+                //As it was never used Pix mpix = new Pix(nativePix);
                 boolean uploadStatus = false;
 
-
-                //call upload method
-                //uploadStatus = fileUpload();
-
-                /*ProgressDialog processingdialog = ProgressDialog.show(ImageUploadDialog.this, "", "Processing...", true);
-                processingdialog.show();
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        processingdialog.dismiss();
-                    }
-                }, 5000);
-                */
                 if (true) {
                     pgsBar.setVisibility(View.VISIBLE);
                     txtview.setVisibility(View.VISIBLE);
@@ -477,18 +464,6 @@ public class ImageUploadDialog extends Activity {
                         }
                     });
 
-                    //String encimg = imgresp;
-                    /*byte[] bajpeg = Base64.decode(imgresp, Base64.DEFAULT);
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(bajpeg, 0, bajpeg.length);
-                    Pix pix = ReadFile.readBitmap(bitmap);
-                    nativePix = pix.getNativePix();
-
-                    Intent result = new Intent();
-                    result.putExtra(UPLOAD_IMAGE, true);
-                    result.putExtra(EXTRA_NATIVE_PIX, nativePix);
-                    result.putExtra(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, accessibilityMode);
-                    setResult(RESULT_OK, result);
-                    finish();*/
                 }
 
 
@@ -516,6 +491,7 @@ public class ImageUploadDialog extends Activity {
         boolean accessibilityMode = extras.getBoolean(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, false);
         Pix mpix = new Pix(nativePix);
         Bitmap bitmap = WriteFile.writeBitmap(mpix);
+
 
         progressDialog = new ProgressDialog(ImageUploadDialog.this);
         progressDialog.setMessage("Uploading, please wait...");
@@ -592,63 +568,12 @@ public class ImageUploadDialog extends Activity {
         //RequestQueue rQueue = Volley.newRequestQueue(this);
         rQueue.add(request2);
         try {
-            sleep(3000);
+            sleep(4000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         return true;
     }
-
-    /*protected void fileDownload(ListenerInterface listener){
-        //Bundle extras = getIntent().getExtras();
-        //long nativePix = extras.getLong(EXTRA_NATIVE_PIX, 0);
-        //boolean accessibilityMode = extras.getBoolean(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, false);
-        //Pix mpix = new Pix(nativePix);
-        //Bitmap bitmap = WriteFile.writeBitmap(mpix);
-
-        String resp;
-
-
-        //sending image to server
-        StringRequest request = new StringRequest(Request.Method.POST, URLdownload, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String s) {
-                progressDialog.dismiss();
-                if (s.equals("Download error")) {
-                    Toast.makeText(ImageUploadDialog.this, "Download error occured", Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(ImageUploadDialog.this, "Processing Completed", Toast.LENGTH_LONG).show();
-                    listener.listenermethod(s);
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                Toast.makeText(ImageUploadDialog.this, "Some error occurred -> " + volleyError, Toast.LENGTH_LONG).show();
-            }
-        }) {
-            //adding parameters to send
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parameters = new HashMap<String, String>();
-                //parameters.put("image", imageString);
-                parameters.put("filename", imgref);
-                return parameters;
-            }
-        };
-        //RequestQueue rQueue = Volley.newRequestQueue(this);
-        rQueue.add(request);
-
-        /*new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(ImageUploadDialog.this, "Loading Results", Toast.LENGTH_LONG).show();
-            }
-        }, 2000);*/
-        /*byte [] bajpeg = Base64.decode(getImgresp(), Base64.DEFAULT);
-        Bitmap bitmap = BitmapFactory.decodeByteArray(bajpeg, 0 , bajpeg.length);
-        Pix pix = ReadFile.readBitmap(bitmap);
-        nativePix = pix.getNativePix();
-        return nativePix;*/
 
 
 }
