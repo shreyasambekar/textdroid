@@ -17,14 +17,22 @@ package com.renard.ocr.main_menu.language;
 
 import com.renard.ocr.util.Util;
 
+import android.Manifest;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.JobIntentService;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import com.renard.ocr.MonitoredActivity;
+import com.renard.ocr.PermissionGrantedEvent;
+import com.renard.ocr.R;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -32,6 +40,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+import de.greenrobot.event.EventBus;
 
 public class OCRLanguageInstallService extends JobIntentService {
 
@@ -43,6 +53,7 @@ public class OCRLanguageInstallService extends JobIntentService {
     public static final String EXTRA_STATUS = "status";
     public static final String EXTRA_FILE_NAME = "file_name";
     public static final String LOG_TAG = OCRLanguageInstallService.class.getSimpleName();
+
 
 
     public static void enqueueWork(Context context, Intent intent) {
@@ -93,6 +104,7 @@ public class OCRLanguageInstallService extends JobIntentService {
 
         }
     }
+
 
     private void closeInputStream(InputStream inputStream) {
         if (inputStream != null) {
