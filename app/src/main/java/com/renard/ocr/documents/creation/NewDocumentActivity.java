@@ -16,6 +16,8 @@
 
 package com.renard.ocr.documents.creation;
 
+import com.googlecode.leptonica.android.Pix;
+import com.googlecode.leptonica.android.ReadFile;
 import com.renard.ocr.MonitoredActivity;
 import com.renard.ocr.R;
 import com.renard.ocr.documents.creation.crop.CropImageActivity;
@@ -29,6 +31,7 @@ import com.renard.ocr.pdf.Hocr2Pdf.PDFProgressListener;
 import com.renard.ocr.util.MemoryInfo;
 import com.renard.ocr.util.Util;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -44,6 +47,8 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -399,11 +404,23 @@ public abstract class NewDocumentActivity extends MonitoredActivity {
                     /*  Extract the UPLOAD_IMAGE boolean value from the received intent here
                     *   and also send it to the OCRActivity
                     * */
+
+                    String savedImagePath = data.getStringExtra(ImageUploadDialog.IMAGE_PATH);
+                    Bitmap bitmap = BitmapFactory.decodeFile(savedImagePath);
+                    Pix pix = null;
+                    pix = ReadFile.readBitmap(bitmap);
+                    if(pix != null) {
+                        Toast.makeText(this, "In the new document activity", Toast.LENGTH_LONG).show();
+                    }
                     boolean uploadImage = data.getBooleanExtra(UPLOAD_IMAGE, false);
 
-                    long nativePix = data.getLongExtra(EXTRA_NATIVE_PIX, 0);
+                    long nativePix = 0;
+                    nativePix = pix.getNativePix();
+                    if(nativePix != 0) {
+                        Toast.makeText(this, savedImagePath, Toast.LENGTH_LONG).show();
+                    }
                     boolean accessibilityMode = data.getBooleanExtra(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, false);
-                    Toast.makeText(this, "In the new document activity", Toast.LENGTH_LONG).show();
+                   // Toast.makeText(this, "In the new document activity", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(this, OCRActivity.class);
                     intent.putExtra(EXTRA_NATIVE_PIX, nativePix);
                     intent.putExtra(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, accessibilityMode);

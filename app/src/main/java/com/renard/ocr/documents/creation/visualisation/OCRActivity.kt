@@ -69,7 +69,7 @@ class OCRActivity : MonitoredActivity(), LayoutChoseListener {
     @BindView(R.id.column_pick_completed)
     lateinit var mButtonStartOCR: Button
     @BindView(R.id.progress_image)
-    @Nullable lateinit var mImageView: OCRImageView
+    lateinit var mImageView: OCRImageView
 
     private var mOcrLanguage: String? = null
     private lateinit var mOCR: OCR
