@@ -19,9 +19,11 @@ import com.renard.ocr.HintDialog;
 import com.renard.ocr.PermissionGrantedEvent;
 import com.renard.ocr.R;
 import com.renard.ocr.documents.creation.ImageSource;
+import com.renard.ocr.documents.creation.MemoryWarningDialog;
 import com.renard.ocr.documents.creation.NewDocumentActivity;
 import com.renard.ocr.documents.creation.PixLoadStatus;
 import com.renard.ocr.documents.viewing.DocumentContentProvider;
+import com.renard.ocr.documents.viewing.ViewAnimation;
 import com.renard.ocr.documents.viewing.single.DocumentActivity;
 import com.renard.ocr.main_menu.AboutActivity;
 import com.renard.ocr.main_menu.FeedbackActivity;
@@ -48,16 +50,22 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.view.ActionMode;
-import android.support.v7.widget.Toolbar;
+//import android.support.design.widget.NavigationView;
+import com.google.android.material.navigation.NavigationView;
+//import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.FragmentManager;
+//import android.support.v4.app.LoaderManager;
+import androidx.loader.app.LoaderManager;
+//import android.support.v4.content.CursorLoader;
+import androidx.loader.content.CursorLoader;
+//import android.support.v4.content.Loader;
+import androidx.loader.content.Loader;
+import androidx.core.view.GravityCompat;
+//import android.support.v4.widget.DrawerLayout;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.view.ActionMode;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -102,11 +110,13 @@ public class DocumentGridActivity extends NewDocumentActivity implements Documen
     private final Handler mScrollHandler = new ScrollHandler();
     private boolean mPendingThumbnailUpdate = false;
     private boolean mBusIsRegistered = false;
+    private boolean isrotate = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_document_grid);
+        //ActivityDocumentGridBinding bi = DataBindingUtil.setContentView(this, R.layout.activity_document_grid);
         initToolbar();
         initNavigationDrawer();
         initGridView();
@@ -114,6 +124,41 @@ public class DocumentGridActivity extends NewDocumentActivity implements Documen
         if (savedInstanceState == null) {
             checkForImageIntent(getIntent());
         }
+        setupFab();
+    }
+
+    private void setupFab() {
+        ViewAnimation.init(findViewById(R.id.fabcamera));
+        ViewAnimation.init(findViewById(R.id.fabGallery));
+        findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isrotate = ViewAnimation.rotateFab(v, !isrotate);
+                if(isrotate){
+                    findViewById(R.id.obstructor).setVisibility(View.VISIBLE);
+                    ViewAnimation.showIn(findViewById(R.id.fabcamera));
+                    ViewAnimation.showIn(findViewById(R.id.fabGallery));
+                }else{
+                    findViewById(R.id.obstructor).setVisibility(View.GONE);
+                    ViewAnimation.showOut(findViewById(R.id.fabcamera));
+                    ViewAnimation.showOut(findViewById(R.id.fabGallery));
+                }
+            }
+        });
+
+        findViewById(R.id.fabcamera).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkRam(MemoryWarningDialog.DoAfter.START_CAMERA);
+            }
+        });
+
+        findViewById(R.id.fabGallery).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkRam(MemoryWarningDialog.DoAfter.START_GALLERY);
+            }
+        });
     }
 
     @Override

@@ -120,7 +120,7 @@
         <item name="background">@color/accent</item>
     </style>
 
-    <style name="ColoredButton" parent="Base.Widget.AppCompat.Button">
+    <style name="ColoredButton" parent="Widget.MaterialComponents.Button">
         <item name="colorButtonNormal">@color/accent</item>
     </style>
 

@@ -23,7 +23,7 @@ import android.graphics.Bitmap.CompressFormat;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import android.support.annotation.IntRange;
+import androidx.annotation.IntRange;
 
 /**
  * JPEG input and output methods.

@@ -26,9 +26,11 @@ import com.viewpagerindicator.CirclePageIndicator;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
+//import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
+//import android.support.v4.view.ViewPager;
+import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -133,7 +135,7 @@ public class DocumentPagerFragment extends Fragment implements DocumentContainer
                 mTitleIndicator.setVisibility(View.GONE);
             }
 
-            mTitleIndicator.setOnPageChangeListener(new OnPageChangeListener() {
+            mTitleIndicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
                 @Override
                 public void onPageSelected(int position) {

@@ -35,21 +35,29 @@ import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.app.NavUtils;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.NonNull;
+//import android.support.design.widget.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+//import android.support.v4.app.LoaderManager;
+import androidx.loader.app.LoaderManager;
+import androidx.core.app.NavUtils;
+//import android.support.v4.content.CursorLoader;
+//import android.support.v4.content.Loader;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
+import androidx.appcompat.app.AlertDialog;
 import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
@@ -132,7 +140,7 @@ public class DocumentActivity extends NewDocumentActivity implements LoaderManag
     private void initBottomSheet() {
         BottomSheetBehavior behavior = BottomSheetBehavior.from(mBottomSheet);
         behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+        behavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
 
@@ -263,7 +271,6 @@ public class DocumentActivity extends NewDocumentActivity implements LoaderManag
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.document_activity_options, menu);
         return true;
     }
@@ -317,7 +324,7 @@ public class DocumentActivity extends NewDocumentActivity implements LoaderManag
     protected synchronized void onDestroy() {
         super.onDestroy();
         BottomSheetBehavior behavior = BottomSheetBehavior.from(mBottomSheet);
-        behavior.setBottomSheetCallback(null);
+        behavior.addBottomSheetCallback(null);
     }
 
     private void deleteDocument() {

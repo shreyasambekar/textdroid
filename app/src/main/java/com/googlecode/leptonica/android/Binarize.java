@@ -18,7 +18,8 @@ package com.googlecode.leptonica.android;
 
 //import androidx.annotation.FloatRange;
 
-import android.support.annotation.FloatRange;
+//import android.support.annotation.FloatRange;
+import androidx.annotation.FloatRange;
 
 /**
  * Image binarization methods.

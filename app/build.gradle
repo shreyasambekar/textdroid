@@ -7,16 +7,19 @@ apply plugin: 'io.fabric'
 apply plugin: 'checkstyle'
 apply plugin: 'kotlin-kapt'
 
-def versions = ['appcompat_v7' : '27.1.1',
-                'butterknife'  : '8.8.1',
+def versions = ['appcompat_v7' : '28.0.0',
+                'butterknife'  : '10.0.0',
                 'leak_canary'  : '1.5',
-                'card_view'    : '27.1.1',
+                'card_view'    : '28.0.0',
                 'glide'        : '4.8.0',
                 'design'       : '27.1.1',
                 'lifecycle'    : '1.1.1',
                 'photoview'    : '1.2.4',
                 'play_services': '16.0.3',
                 'relinker'     : '1.2.3']
+def lifecycle_version = "2.2.0"
+def arch_version = "2.1.0"
+
 
 
 
@@ -31,7 +34,7 @@ task checkstyle(type: Checkstyle) {
 
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     buildToolsVersion '28.0.3'
 
     lintOptions {
@@ -145,9 +148,9 @@ if (propFile.canRead()) {
 dependencies {
     implementation 'com.github.barteksc:pdfium-android:1.5.0'
     implementation fileTree(include: '*.jar', dir: 'src/main/libs')
-    implementation "com.android.support:design:${versions.appcompat_v7}"
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
-    implementation 'com.android.support:support-vector-drawable:27.1.1'
+    //implementation "com.android.support:design:${versions.appcompat_v7}"
+    //implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    //implementation 'com.android.support:support-vector-drawable:27.1.1'
     debugImplementation "com.squareup.leakcanary:leakcanary-android:${versions.leak_canary}"
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${versions.leak_canary}"
     implementation 'com.viewpagerindicator:library:2.4.1@aar'
@@ -155,14 +158,15 @@ dependencies {
     implementation 'com.google.code.findbugs:jsr305:3.0.1'
     implementation 'de.greenrobot:eventbus:2.4.0'
     implementation 'com.nineoldandroids:library:2.4.0'
-    implementation "com.android.support:design:${versions.design}"
-    implementation "com.android.support:appcompat-v7:${versions.appcompat_v7}"
+    //implementation "com.android.support:design:${versions.design}"
+    //implementation "com.android.support:appcompat-v7:${versions.appcompat_v7}"
     implementation 'org.apache.commons:commons-compress:1.12'
-    implementation "com.android.support:cardview-v7:${versions.card_view}"
+    //implementation "com.android.support:cardview-v7:${versions.card_view}"
     implementation "com.jakewharton:butterknife:${versions.butterknife}"
     implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.0.0'
 
-	implementation 'com.android.support:support-annotations:28.0.0'
+	//implementation 'com.android.support:support-annotations:28.0.0'
 
     implementation 'com.android.volley:volley:1.1.0'
 
@@ -184,12 +188,29 @@ dependencies {
         transitive = true
     }
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "android.arch.lifecycle:extensions:${versions.lifecycle}"
-    implementation "android.arch.lifecycle:common-java8:${versions.lifecycle}"
+    //implementation "android.arch.lifecycle:extensions:${versions.lifecycle}"
+    //implementation "android.arch.lifecycle:common-java8:${versions.lifecycle}"
     implementation "com.getkeepsafe.relinker:relinker:${versions.relinker}"
 
     annotationProcessor "com.github.bumptech.glide:compiler:${versions.glide}"
     kapt "com.jakewharton:butterknife-compiler:${versions.butterknife}"
+    implementation 'androidx.fragment:fragment:1.2.5'
+    implementation 'com.google.android.material:material:1.1.0'
+    implementation "androidx.drawerlayout:drawerlayout:1.0.0"
+    implementation "androidx.annotation:annotation:1.1.0"
+    // ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    // LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    // Lifecycles only (without ViewModel or LiveData)
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
+
+    // Saved state module for ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
+
+    implementation "androidx.coordinatorlayout:coordinatorlayout:1.1.0"
+
+
 }
 afterEvaluate {
     android.applicationVariants.all { variant ->
@@ -200,3 +221,5 @@ crashlytics {
     enableNdk true
 }
 apply plugin: 'com.google.gms.google-services'
+
+

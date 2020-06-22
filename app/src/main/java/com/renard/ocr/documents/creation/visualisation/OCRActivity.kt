@@ -16,10 +16,9 @@
 package com.renard.ocr.documents.creation.visualisation
 
 import android.Manifest
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import android.content.ContentValues
 import android.content.Intent
 import android.graphics.Bitmap
@@ -27,7 +26,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.RemoteException
-import android.support.annotation.Nullable
+import androidx.annotation.Nullable
 import android.text.format.DateFormat
 import android.view.View
 import android.widget.Button
@@ -69,7 +68,7 @@ class OCRActivity : MonitoredActivity(), LayoutChoseListener {
     @BindView(R.id.column_pick_completed)
     lateinit var mButtonStartOCR: Button
     @BindView(R.id.progress_image)
-    @Nullable lateinit var mImageView: OCRImageView
+    lateinit var mImageView: OCRImageView
 
     private var mOcrLanguage: String? = null
     private lateinit var mOCR: OCR
@@ -88,7 +87,7 @@ class OCRActivity : MonitoredActivity(), LayoutChoseListener {
         /*  Extract the value of UPLOAD_IMAGE from the received intent here and assign it to
         *   the boolean variable mUploadImage */
 
-        mOCR = ViewModelProviders.of(this, object : ViewModelProvider.Factory {
+        mOCR = ViewModelProvider(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 return OCR(Pix(nativePix), application as TextFairyApplication) as T
             }

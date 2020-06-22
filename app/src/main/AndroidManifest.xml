@@ -23,7 +23,7 @@
             android:theme="@style/AppTheme">
 
         <provider
-                android:name="android.support.v4.content.FileProvider"
+                android:name="androidx.core.content.FileProvider"
                 android:authorities="@string/config_share_file_auth"
                 android:grantUriPermissions="true"
                 android:exported="false">

@@ -11,7 +11,7 @@
         android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
         android:layout_centerInParent="true"
-        android:indeterminateTint="#FF8229"
+        android:indeterminateTint="@color/orange"
         android:visibility="gone"/>
 
     <TextView

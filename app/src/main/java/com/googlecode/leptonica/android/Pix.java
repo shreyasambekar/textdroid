@@ -21,8 +21,8 @@ import android.graphics.Rect;
 //import androidx.annotation.Size;
 
 
-import android.support.annotation.ColorInt;
-import android.support.annotation.Size;
+import androidx.annotation.ColorInt;
+import androidx.annotation.Size;
 
 /**
  * Java representation of a native Leptonica PIX object.

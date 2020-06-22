@@ -50,12 +50,16 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.provider.MediaStore;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.FileProvider;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.accessibility.AccessibilityManagerCompat;
+//import android.support.v4.app.DialogFragment;
+import androidx.fragment.app.DialogFragment;
+//import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
+//import android.support.v4.app.FragmentTransaction;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.fragment.app.FragmentActivity;
+import androidx.core.content.FileProvider;
+
+import androidx.core.view.accessibility.AccessibilityManagerCompat;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
@@ -68,6 +72,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import  androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -152,7 +157,7 @@ public abstract class NewDocumentActivity extends MonitoredActivity {
     private CameraResult mCameraResult;
 
 
-    private void checkRam(MemoryWarningDialog.DoAfter doAfter) {
+    protected void checkRam(MemoryWarningDialog.DoAfter doAfter) {
 
         long availableMegs = MemoryInfo.getFreeMemory(this);
         Log.i(LOG_TAG, "available ram = " + availableMegs);
@@ -264,25 +269,7 @@ public abstract class NewDocumentActivity extends MonitoredActivity {
         mImageSource = ImageSource.values()[index];
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == R.id.item_camera) {
-            checkRam(MemoryWarningDialog.DoAfter.START_CAMERA);
-            return true;
-        } else if (itemId == R.id.item_gallery) {
-            checkRam(MemoryWarningDialog.DoAfter.START_GALLERY);
-            return true;
-        }
 
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.base_document_activity_options, menu);
-        return true;
-    }
 
     private void onTakePhotoActivityResult(CameraResult cameraResult) {
         if (cameraResult.mResultCode == RESULT_OK) {

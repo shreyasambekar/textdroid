@@ -15,7 +15,7 @@
     <!--<item name="android:textColorSecondary">@color/text_secondary</item>-->
 
 
-    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme.Base" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:actionModeStyle">@style/ActionMode</item>
         <item name="android:windowContentOverlay">@null</item>

@@ -22,8 +22,8 @@ import android.util.Log;
 
 import android.graphics.Point;
 
-import android.support.annotation.Size;
-
+//import android.support.annotation.Size;
+import androidx.annotation.Size;
 /**
  * Wrapper for Leptonica's native BOX.
  *

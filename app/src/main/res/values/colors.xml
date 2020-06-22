@@ -3,8 +3,8 @@
     
     <color name="dark_grey">#ff333333</color>
     <color name="document_grid_background">#ffDFDFDF</color>
-    <color name="primary">#212121</color>
-    <color name="accent">#6200ee</color>
+    <color name="primary">#000000</color>
+    <color name="accent">#2979FF</color>
     <color name="toolbar_bottom_bar">#AAAAAA</color>
 
     <color name="text_primary">#DE000000</color>
@@ -20,5 +20,9 @@
 
     <color name="text_background">@color/document_grid_background</color>
 
+    <color name="white">#ffff</color>
+    <color name="grey_20">#cccccc</color>
+    <color name="grey_80">#37474F</color>
+    <color name="orange">#FF8229</color>
 
 </resources>

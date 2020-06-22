@@ -22,7 +22,7 @@ import android.util.Log;
 
 import java.io.File;
 
-import android.support.annotation.WorkerThread;
+import androidx.annotation.WorkerThread;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;

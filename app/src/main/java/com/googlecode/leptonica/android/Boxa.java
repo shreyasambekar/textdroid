@@ -20,7 +20,7 @@ import android.graphics.Rect;
 //import androidx.annotation.Size;
 import android.util.Log;
 
-import android.support.annotation.Size;
+import androidx.annotation.Size;
 
 /**
  * Wrapper for Leptonica's native BOXA.
