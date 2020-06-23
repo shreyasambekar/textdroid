@@ -421,9 +421,6 @@ public abstract class NewDocumentActivity extends MonitoredActivity {
                     else {
                         nativePix = data.getLongExtra(EXTRA_NATIVE_PIX, 0);
                     }
-                    if(nativePix != 0) {
-                        Toast.makeText(this, "Successfully Created the Image from Pix", Toast.LENGTH_LONG).show();
-                    }
 
                     boolean accessibilityMode = data.getBooleanExtra(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, false);
                     intent.putExtra(EXTRA_NATIVE_PIX, nativePix);

@@ -60,7 +60,7 @@ public class ImageUploadDialog extends Activity {
 
     public final static String IMAGE_PATH = "image_path";
     int PICK_IMAGE_REQUEST = 111;
-    String URLupload = "http://13.235.245.117:80/file-upload";
+    String URLupload = "http://13.233.19.130:80/file-upload";
     ProgressDialog progressDialog;
     Timestamp timestamp = new Timestamp(System.currentTimeMillis());
     final String imgref = new String("IMG" + timestamp.getTime() + (Math.random() * 100));
@@ -130,7 +130,7 @@ public class ImageUploadDialog extends Activity {
                             final ImageView image = (ImageView) findViewById(R.id.myImageView);
                             Glide.with(ImageUploadDialog.this)
                                     .asBitmap()
-                                    .load("http://13.235.245.117:80/static/processed_images/" + imgref + ".png")
+                                    .load("http://13.233.19.130:80/static/processed_images/" + imgref + ".jpg")
                                     .into(new SimpleTarget<Bitmap>() {
                                         @Override
                                         public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
@@ -163,7 +163,8 @@ public class ImageUploadDialog extends Activity {
                         return parameters;
                     }
                 };
-
+                RequestQueue rQueue = Volley.newRequestQueue(ImageUploadDialog.this);
+                rQueue.add(request);
             }
         });
         AlertDialog alert = builder.create();
