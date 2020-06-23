@@ -404,31 +404,32 @@ public abstract class NewDocumentActivity extends MonitoredActivity {
                     /*  Extract the UPLOAD_IMAGE boolean value from the received intent here
                     *   and also send it to the OCRActivity
                     * */
-
-                    String savedImagePath = data.getStringExtra(ImageUploadDialog.IMAGE_PATH);
-                    Bitmap bitmap = BitmapFactory.decodeFile(savedImagePath);
-                    Pix pix = null;
-                    pix = ReadFile.readBitmap(bitmap);
-                    if(pix != null) {
-                        Toast.makeText(this, "In the new document activity", Toast.LENGTH_LONG).show();
-                    }
                     boolean uploadImage = data.getBooleanExtra(UPLOAD_IMAGE, false);
-
-                    long nativePix = 0;
-                    nativePix = pix.getNativePix();
-                    if(nativePix != 0) {
-                        Toast.makeText(this, savedImagePath, Toast.LENGTH_LONG).show();
-                    }
-                    boolean accessibilityMode = data.getBooleanExtra(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, false);
-                   // Toast.makeText(this, "In the new document activity", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(this, OCRActivity.class);
+                    String savedImagePath;
+                    Pix pix = null;
+                    long nativePix = 0;
+                    if(uploadImage) {
+                        savedImagePath = data.getStringExtra(ImageUploadDialog.IMAGE_PATH);
+                        Bitmap bitmap = BitmapFactory.decodeFile(savedImagePath);
+                        pix = ReadFile.readBitmap(bitmap);
+                        if(pix != null) {
+                            Toast.makeText(this, "In the new document activity", Toast.LENGTH_LONG).show();
+                        }
+                        nativePix = pix.getNativePix();
+                    }
+                    else {
+                        nativePix = data.getLongExtra(EXTRA_NATIVE_PIX, 0);
+                    }
+                    if(nativePix != 0) {
+                        Toast.makeText(this, "Successfully Created the Image from Pix", Toast.LENGTH_LONG).show();
+                    }
+
+                    boolean accessibilityMode = data.getBooleanExtra(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, false);
                     intent.putExtra(EXTRA_NATIVE_PIX, nativePix);
                     intent.putExtra(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, accessibilityMode);
                     intent.putExtra(OCRActivity.EXTRA_PARENT_DOCUMENT_ID, getParentId());
-
-                    /*Added this line*/
                     intent.putExtra(UPLOAD_IMAGE, uploadImage);
-
                     startActivityForResult(intent, REQUEST_CODE_OCR);
                     break;
             }

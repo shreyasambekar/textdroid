@@ -164,8 +164,6 @@ public class ImageUploadDialog extends Activity {
                     }
                 };
 
-                RequestQueue rQueue = Volley.newRequestQueue(ImageUploadDialog.this);
-                rQueue.add(request);
             }
         });
         AlertDialog alert = builder.create();
