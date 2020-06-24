@@ -33,6 +33,7 @@
                   android:layout_toRightOf="@+id/app_icon"
                   android:id="@+id/toolbar_text"
                   android:textColor="@android:color/white"
+                  android:fontFamily="@font/roboto_medium"
         />
     </RelativeLayout>
 

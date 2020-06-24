@@ -56,20 +56,7 @@
         android:theme="@style/ColoredButton"
         app:backgroundTint="@color/accent" />
 
-
-    <TextView
-        android:id="@+id/gallery_hint"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/fairy_hint"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="@dimen/default_element_padding"
-        android:layout_marginRight="99dp"
-        android:layout_marginBottom="57dp"
-        android:text="New Image"
-        android:textColor="@color/grey3"
-        android:textSize="20dp" />
+    
 
     <TextView
             android:id="@+id/fairy_hint"
