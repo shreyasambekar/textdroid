@@ -1,5 +1,6 @@
 package com.renard.ocr.documents.creation;
 
+import com.android.volley.RetryPolicy;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -163,6 +164,23 @@ public class ImageUploadDialog extends Activity {
                         return parameters;
                     }
                 };
+
+                request.setRetryPolicy(new RetryPolicy() {
+                    @Override
+                    public int getCurrentTimeout() {
+                        return 600000;
+                    }
+
+                    @Override
+                    public int getCurrentRetryCount() {
+                        return 600000;
+                    }
+
+                    @Override
+                    public void retry(VolleyError error) throws VolleyError {
+
+                    }
+                });
                 RequestQueue rQueue = Volley.newRequestQueue(ImageUploadDialog.this);
                 rQueue.add(request);
             }
