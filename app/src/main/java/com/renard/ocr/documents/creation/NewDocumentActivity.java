@@ -16,6 +16,8 @@
 
 package com.renard.ocr.documents.creation;
 
+import com.googlecode.leptonica.android.Pix;
+import com.googlecode.leptonica.android.ReadFile;
 import com.renard.ocr.MonitoredActivity;
 import com.renard.ocr.R;
 import com.renard.ocr.documents.creation.crop.CropImageActivity;
@@ -44,6 +46,8 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -383,24 +387,32 @@ public abstract class NewDocumentActivity extends MonitoredActivity {
                     break;
                 case REQUEST_CODE_IMGUPLDLG:
 
-                    /*  Extract the UPLOAD_IMAGE boolean value from the received intent here
-                    *   and also send it to the OCRActivity
-                    * */
                     boolean uploadImage = data.getBooleanExtra(UPLOAD_IMAGE, false);
-
-                    long nativePix = data.getLongExtra(EXTRA_NATIVE_PIX, 0);
-                    boolean accessibilityMode = data.getBooleanExtra(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, false);
-                    Toast.makeText(this, "In the new document activity", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(this, OCRActivity.class);
+                    String savedImagePath;
+                    Pix pix = null;
+                    long nativePix = 0;
+                    if(uploadImage) {
+                        savedImagePath = data.getStringExtra(ImageUploadDialog.IMAGE_PATH);
+                        Bitmap bitmap = BitmapFactory.decodeFile(savedImagePath);
+                        pix = ReadFile.readBitmap(bitmap);
+                        if(pix != null) {
+                            Toast.makeText(this, "In the new document activity", Toast.LENGTH_LONG).show();
+                        }
+                        nativePix = pix.getNativePix();
+                    }
+                    else {
+                        nativePix = data.getLongExtra(EXTRA_NATIVE_PIX, 0);
+                    }
+
+                    boolean accessibilityMode = data.getBooleanExtra(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, false);
                     intent.putExtra(EXTRA_NATIVE_PIX, nativePix);
                     intent.putExtra(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, accessibilityMode);
                     intent.putExtra(OCRActivity.EXTRA_PARENT_DOCUMENT_ID, getParentId());
-
-                    /*Added this line*/
                     intent.putExtra(UPLOAD_IMAGE, uploadImage);
-
                     startActivityForResult(intent, REQUEST_CODE_OCR);
                     break;
+
             }
         } else if (CropImageActivity.RESULT_NEW_IMAGE == resultCode) {
             switch (mImageSource) {
@@ -1002,3 +1014,4 @@ public abstract class NewDocumentActivity extends MonitoredActivity {
     }
 
 }
+
